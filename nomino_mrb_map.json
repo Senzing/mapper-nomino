@@ -1,0 +1,398 @@
+{
+    "input": {
+        "inputFileName": "Nomino/active mrb042720.csv",
+        "fieldDelimiter": ",",
+        "columnHeaders": [
+            "riskfeedID",
+            "OriginalID",
+            "namefull",
+            "phone",
+            "fax",
+            "email",
+            "website",
+            "Image_URL",
+            "page_URL",
+            "Source",
+            "type",
+            "Program",
+            "Listingdate",
+            "remarks",
+            "Address",
+            "City",
+            "province",
+            "postcode",
+            "Country",
+            "Alias_name",
+            "riskcode",
+            "timestamp",
+            "Person"
+        ]
+    },
+    "calculations": [
+        {"entity_type": "'PERSON' if rowData['Person'] == '1' else 'ORGANIZATION'"},
+        {"name_full": "rowData['namefull'] if rowData['Person'] == '1' else ''"},
+        {"name_org": "rowData['namefull'] if rowData['Person'] != '1' else ''"},
+        {"group_association_org_name": "rowData['Alias_name'] if rowData['Person'] == '1' else ''"},
+        {"dba_name_org": "rowData['Alias_name'] if rowData['Person'] != '1' else ''"}
+    ],
+    "outputs": [
+        {
+            "data_source": "NOMINO_MRB",
+            "entity_type": "%(entity_type)s",
+            "record_id": "%(riskfeedID)s",
+            "attributes": [
+                {   
+                    "attribute": "RECORD_TYPE",
+                    "mapping": "%(entity_type)s"
+                },
+                {
+                    "attribute": "risk_feed_id",
+                    "mapping": "%(riskfeedID)s",
+                    "statistics": {
+                        "columnName": "riskfeedID",
+                        "populated%": 100.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "254219 (1)",
+                            "254220 (1)",
+                            "254221 (1)",
+                            "254222 (1)",
+                            "254223 (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "original_id",
+                    "mapping": "%(OriginalID)s",
+                    "statistics": {
+                        "columnName": "OriginalID",
+                        "populated%": 82.85,
+                        "unique%": 82.46,
+                        "top5values": [
+                            "License Number (68)",
+                            "D192 (46)",
+                            "RD192 (46)",
+                            "IHR12/17/2018784 (43)",
+                            "C071 (41)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(namefull)s",
+                    "statistics": {
+                        "columnName": "namefull",
+                        "populated%": 99.99,
+                        "unique%": 68.2,
+                        "top5values": [
+                            "REGISTERED AGENTS INC (329)",
+                            "LEGALINC CORPORATE SERVICES INC (307)",
+                            "Central Coast Ag Farming, LLC (298)",
+                            "Organic Green Farms (289)",
+                            "ALAN BRAMSON (272)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "NAME_FULL",
+                    "mapping": "%(name_full)s"
+                },
+                {
+                    "attribute": "NAME_ORG",
+                    "mapping": "%(name_org)s"
+                },
+                {
+                    "attribute": "PHONE_NUMBER",
+                    "mapping": "%(phone)s",
+                    "statistics": {
+                        "columnName": "phone",
+                        "populated%": 9.24,
+                        "unique%": 63.98,
+                        "top5values": [
+                            "(877) 774-4779 (43)",
+                            "0000000000 (40)",
+                            "(801) 243-0544 (37)",
+                            "(800) 561-8711 (37)",
+                            "(385) 203-8556 (32)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "EMAIL_ADDRESS",
+                    "mapping": "%(email)s",
+                    "statistics": {
+                        "columnName": "email",
+                        "populated%": 5.66,
+                        "unique%": 70.86,
+                        "top5values": [
+                            "priya@medmen.com (24)",
+                            "vikhong1@yahoo.com (16)",
+                            "license@pmcoc.com (14)",
+                            "scott@lakush.com (14)",
+                            "gene@gonzalezholdings.com (14)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "WEBSITE_ADDRESS",
+                    "mapping": "%(website)s",
+                    "statistics": {
+                        "columnName": "website",
+                        "populated%": 1.0,
+                        "unique%": 55.66,
+                        "top5values": [
+                            "www.medmen.com (15)",
+                            "www.ultrahealth.com (14)",
+                            "www.gocaliva.com (10)",
+                            "www.rgreenleaf.com (10)",
+                            "www.papaandbarkley.com (9)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "image_url",
+                    "mapping": "%(Image_URL)s",
+                    "statistics": {
+                        "columnName": "Image_URL",
+                        "populated%": 10.06,
+                        "unique%": 2.09,
+                        "top5values": [
+                            "https://tax.nv.gov/uploadedFiles/taxnvgov/Content/FAQs/CURRENT%20LICENSE'S%20as%20of%20August%201,%202019%20(7).pdf (5795)",
+                            "https://lcb.wa.gov/sites/default/files/publications/Public_Records/2019/MarijuanaApplicants.xls (3336)",
+                            "https://www.tn.gov/content/dam/tn/agriculture/documents/industrial-hemp/hemp-grower-list-8.2.19.pdf (3099)",
+                            "https://health.mo.gov/safety/medical-marijuana/pdf/facility-applicant-identifying-info.pdf (2265)",
+                            "https://www.oregon.gov/olcc/marijuana/Documents/MarijuanaLicenses_Approved.xlsx (2249)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "page_url",
+                    "mapping": "%(page_URL)s",
+                    "statistics": {
+                        "columnName": "page_URL",
+                        "populated%": 99.97,
+                        "unique%": 1.78,
+                        "top5values": [
+                            "https://codor.mylicense.com/MED_Verification/Search.aspx (106555)",
+                            "www.nominodata.com (40869)",
+                            "https://aca6.accela.com/CALCANNABIS/Cap/CapHome.aspx?module=Licenses (12706)",
+                            "http://omma.ok.gov/list-of-businesses (8257)",
+                            "https://online.bcc.ca.gov/bcc/customization/bcc/cap/licenseSearch.aspx (6211)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "source",
+                    "mapping": "%(Source)s",
+                    "statistics": {
+                        "columnName": "Source",
+                        "populated%": 99.97,
+                        "unique%": 0.04,
+                        "top5values": [
+                            "Colorado Department of Revenue (112692)",
+                            "Owners and Agents (40869)",
+                            "California Department of Food and Agriculture (12706)",
+                            "Oklahoma Medical Marijuana Authority (8257)",
+                            "Califronia Bureau of Cannabis Control (6211)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "type",
+                    "mapping": "%(type)s",
+                    "statistics": {
+                        "columnName": "type",
+                        "populated%": 99.79,
+                        "unique%": 0.2,
+                        "top5values": [
+                            "Support (73902)",
+                            "Key (24618)",
+                            "AGENT (23172)",
+                            "agent (6916)",
+                            "Licensed Grower (4788)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "listing_date",
+                    "mapping": "%(Listingdate)s",
+                    "statistics": {
+                        "columnName": "Listingdate",
+                        "populated%": 15.0,
+                        "unique%": 3.17,
+                        "top5values": [
+                            "12/1/2018 (4321)",
+                            "1/1/2020 (2494)",
+                            "6/1/2019 (1462)",
+                            "12/1/2099 (1107)",
+                            "3/1/2018 (928)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "remarks",
+                    "mapping": "%(remarks)s",
+                    "statistics": {
+                        "columnName": "remarks",
+                        "populated%": 66.44,
+                        "unique%": 3.19,
+                        "top5values": [
+                            "Expired (50119)",
+                            "Approved (44820)",
+                            "Voluntary Surrender (13669)",
+                            "Inactive (7664)",
+                            "Active (7381)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "ADDR_LINE1",
+                    "mapping": "%(Address)s",
+                    "statistics": {
+                        "columnName": "Address",
+                        "populated%": 15.27,
+                        "unique%": 67.41,
+                        "top5values": [
+                            "OAKLAND (624)",
+                            "LOS ANGELES (337)",
+                            "SACRAMENTO (237)",
+                            "SAN FRANCISCO (142)",
+                            "LONG BEACH (128)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "ADDR_CITY",
+                    "mapping": "%(City)s",
+                    "statistics": {
+                        "columnName": "City",
+                        "populated%": 21.73,
+                        "unique%": 10.0,
+                        "top5values": [
+                            "Denver (2169)",
+                            "Las Vegas (1783)",
+                            "OKLAHOMA CITY (1288)",
+                            "North Las Vegas (1155)",
+                            "TULSA (709)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "ADDR_STATE",
+                    "mapping": "%(province)s",
+                    "statistics": {
+                        "columnName": "province",
+                        "populated%": 94.05,
+                        "unique%": 0.03,
+                        "top5values": [
+                            "CO (117207)",
+                            "CA (28796)",
+                            "OK (13711)",
+                            "NV (7828)",
+                            "OR (7058)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "ADDR_POSTAL_CODE",
+                    "mapping": "%(postcode)s",
+                    "statistics": {
+                        "columnName": "postcode",
+                        "populated%": 18.55,
+                        "unique%": 21.63,
+                        "top5values": [
+                            "80216 (532)",
+                            "80223 (461)",
+                            "80239 (256)",
+                            "80204 (210)",
+                            "81007 (185)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "ADDR_COUNTRY",
+                    "mapping": "%(Country)s",
+                    "statistics": {
+                        "columnName": "Country",
+                        "populated%": 98.29,
+                        "unique%": 0.0,
+                        "top5values": [
+                            "USA (211524)",
+                            "US (10620)",
+                            "Canada (248)",
+                            "CAN (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Alias_name)s",
+                    "statistics": {
+                        "columnName": "Alias_name",
+                        "populated%": 39.16,
+                        "unique%": 52.88,
+                        "top5values": [
+                            "IRON ANGEL II, LLC (243)",
+                            "CENTRAL COAST AG FARMING, LLC (202)",
+                            "Native Roots (169)",
+                            "The Green Solution (132)",
+                            "THC FARMS (112)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "GROUP_ASSOCIATION_ORG_NAME",
+                    "mapping": "%(group_association_org_name)s"
+                },
+                {
+                    "attribute": "DBA_NAME_ORG",
+                    "mapping": "%(dba_name_org)s"
+                },
+                {
+                    "attribute": "risk_code",
+                    "mapping": "%(riskcode)s",
+                    "statistics": {
+                        "columnName": "riskcode",
+                        "populated%": 100.0,
+                        "unique%": 0.0,
+                        "top5values": [
+                            "MJ (226251)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "timestamp",
+                    "mapping": "%(timestamp)s",
+                    "statistics": {
+                        "columnName": "timestamp",
+                        "populated%": 100.0,
+                        "unique%": 0.14,
+                        "top5values": [
+                            "2/10/2019 21:53:48 (10535)",
+                            "12/12/2019 11:22:28 (4200)",
+                            "12/12/2019 11:22:31 (4200)",
+                            "12/12/2019 11:22:32 (4000)",
+                            "12/12/2019 11:22:33 (3900)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Person)s",
+                    "statistics": {
+                        "columnName": "Person",
+                        "populated%": 100.0,
+                        "unique%": 0.01,
+                        "top5values": [
+                            "1 (157756)",
+                            "0 (68464)",
+                            "2 (1)",
+                            "3 (1)",
+                            "4 (1)"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
