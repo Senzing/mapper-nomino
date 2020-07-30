@@ -6,8 +6,8 @@ The mapping files in this project are for use with the - [Senzing/mapper-csv](ht
 
 The mappers in this project so far include ...
 
-- [Human trafficking](nomino_ht_map.json)
-- [Marijuana related Businesses](nomino_mrb_map.json)
+- [Human Trafficking (HT)](nomino_ht_map.json)
+- [Marijuana Related Businesses (MRB)](nomino_mrb_map.json)
 
 This is a community site in that we will welcome additional mapping files as users map additional Nomino feeds.
 
