@@ -1,6 +1,6 @@
 {
     "input": {
-        "inputFileName": "Nomino/HumanTraffic/ht_active_033120.csv",
+        "inputFileName": "Nomino/Human_Traffic/ht_active_033120.csv",
         "fieldDelimiter": ",",
         "columnHeaders": [
             "riskfeedID",
@@ -29,9 +29,12 @@
             "riskcode"
         ]
     },
+    "calculations": [
+        {"name_full": "rowData['namefull'][0:250] if rowData['namefull'] else ''"}
+    ],
     "outputs": [
         {
-            "data_source": "NOMINO-HT",
+            "data_source": "NOMINO-HUMAN_TRAFFIC",
             "entity_type": "GENERIC",
             "record_id": "%(riskfeedID)s",
             "attributes": [
@@ -53,7 +56,7 @@
                 },
                 {
                     "attribute": "NAME_FULL",
-                    "mapping": "%(namefull)s",
+                    "mapping": "%(name_full)s",
                     "statistics": {
                         "columnName": "namefull",
                         "populated%": 99.98,
@@ -68,7 +71,7 @@
                     }
                 },
                 {
-                    "attribute": "ref_name",
+                    "attribute": "FirstName",
                     "mapping": "%(First)s",
                     "statistics": {
                         "columnName": "First",
@@ -84,7 +87,7 @@
                     }
                 },
                 {
-                    "attribute": "ref_eyes",
+                    "attribute": "Eyes",
                     "mapping": "%(eyes)s",
                     "statistics": {
                         "columnName": "eyes",
@@ -100,7 +103,7 @@
                     }
                 },
                 {
-                    "attribute": "ref_hair",
+                    "attribute": "Hair",
                     "mapping": "%(hair)s",
                     "statistics": {
                         "columnName": "hair",
@@ -116,7 +119,7 @@
                     }
                 },
                 {
-                    "attribute": "ref_weight",
+                    "attribute": "Weight",
                     "mapping": "%(weight)s",
                     "statistics": {
                         "columnName": "weight",
@@ -132,39 +135,39 @@
                     }
                 },
                 {
-                    "attribute": "ref_height",
+                    "attribute": "Height",
                     "mapping": "%(height)s",
                     "statistics": {
                         "columnName": "height",
                         "populated%": 56.87,
                         "unique%": 0.1,
                         "top5values": [
-                            "5'-5'4\"\" (114888)",
-                            "5'5\"-5'10\"\"\" (48665)",
-                            "5'4\" to 5'6\"\"\" (14143)",
-                            "5'1\" to 5'3\"\"\" (12845)",
+                            "5'-5'4\" (114888)",
+                            "5'5\"-5'10\" (48665)",
+                            "5'4\" to 5'6\" (14143)",
+                            "5'1\" to 5'3\" (12845)",
                             "170 cm / 5'7'' (12575)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ref_marks",
+                    "attribute": "Marks",
                     "mapping": "%(marks)s",
                     "statistics": {
                         "columnName": "marks",
                         "populated%": 0.16,
                         "unique%": 3.47,
                         "top5values": [
-                            "5'5\"\" (148)",
-                            "5'4\"\" (134)",
-                            "5'6\"\" (123)",
-                            "5'7\"\" (118)",
-                            "5'8\"\" (75)"
+                            "5'5\" (148)",
+                            "5'4\" (134)",
+                            "5'6\" (123)",
+                            "5'7\" (118)",
+                            "5'8\" (75)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ref_sex",
+                    "attribute": "GENDER",
                     "mapping": "%(Sex)s",
                     "statistics": {
                         "columnName": "Sex",
@@ -228,7 +231,7 @@
                     }
                 },
                 {
-                    "attribute": "page_url",
+                    "attribute": "PAGE_WEBSITE_ADDRESS",
                     "mapping": "%(page_URL)s",
                     "statistics": {
                         "columnName": "page_URL",
@@ -244,7 +247,7 @@
                     }
                 },
                 {
-                    "attribute": "source",
+                    "attribute": "Source",
                     "mapping": "%(Source)s",
                     "statistics": {
                         "columnName": "Source",
@@ -260,7 +263,7 @@
                     }
                 },
                 {
-                    "attribute": "ADDR_LINE1",
+                    "attribute": "BUSINESS_ADDR_LINE1",
                     "mapping": "%(Address)s",
                     "statistics": {
                         "columnName": "Address",
@@ -276,7 +279,7 @@
                     }
                 },
                 {
-                    "attribute": "ADDR_CITY",
+                    "attribute": "BUSINESS_ADDR_CITY",
                     "mapping": "%(City)s",
                     "statistics": {
                         "columnName": "City",
@@ -292,7 +295,7 @@
                     }
                 },
                 {
-                    "attribute": "ADDR_STATE",
+                    "attribute": "BUSINESS_ADDR_STATE",
                     "mapping": "%(province)s",
                     "statistics": {
                         "columnName": "province",
@@ -308,7 +311,7 @@
                     }
                 },
                 {
-                    "attribute": "ADDR_POSTAL_CODE",
+                    "attribute": "BUSINESS_ADDR_POSTAL_CODE",
                     "mapping": "%(postcode)s",
                     "statistics": {
                         "columnName": "postcode",
@@ -324,7 +327,7 @@
                     }
                 },
                 {
-                    "attribute": "ADDR_COUNTRY",
+                    "attribute": "BUSINESS_ADDR_COUNTRY",
                     "mapping": "%(Country)s",
                     "statistics": {
                         "columnName": "Country",
@@ -356,7 +359,7 @@
                     }
                 },
                 {
-                    "attribute": "risk_code",
+                    "attribute": "Riskcode",
                     "mapping": "%(riskcode)s",
                     "statistics": {
                         "columnName": "riskcode",

@@ -1,6 +1,6 @@
 {
     "input": {
-        "inputFileName": "Nomino/active mrb042720.csv",
+        "inputFileName": "Nomino/MRB/active_mrb071520.csv",
         "fieldDelimiter": ",",
         "columnHeaders": [
             "riskfeedID",
@@ -37,7 +37,7 @@
     ],
     "outputs": [
         {
-            "data_source": "NOMINO_MRB",
+            "data_source": "NOMINO-MRB",
             "entity_type": "%(entity_type)s",
             "record_id": "%(riskfeedID)s",
             "attributes": [
@@ -66,14 +66,14 @@
                     "mapping": "%(OriginalID)s",
                     "statistics": {
                         "columnName": "OriginalID",
-                        "populated%": 82.85,
-                        "unique%": 82.46,
+                        "populated%": 82.46,
+                        "unique%": 84.84,
                         "top5values": [
-                            "License Number (68)",
                             "D192 (46)",
                             "RD192 (46)",
                             "IHR12/17/2018784 (43)",
-                            "C071 (41)"
+                            "C071 (41)",
+                            "P043 (41)"
                         ]
                     }
                 },
@@ -83,12 +83,12 @@
                     "statistics": {
                         "columnName": "namefull",
                         "populated%": 99.99,
-                        "unique%": 68.2,
+                        "unique%": 69.44,
                         "top5values": [
+                            "Central Coast Ag Farming, LLC (330)",
                             "REGISTERED AGENTS INC (329)",
                             "LEGALINC CORPORATE SERVICES INC (307)",
-                            "Central Coast Ag Farming, LLC (298)",
-                            "Organic Green Farms (289)",
+                            "Organic Green Farms (290)",
                             "ALAN BRAMSON (272)"
                         ]
                     }
@@ -106,14 +106,28 @@
                     "mapping": "%(phone)s",
                     "statistics": {
                         "columnName": "phone",
-                        "populated%": 9.24,
-                        "unique%": 63.98,
+                        "populated%": 13.07,
+                        "unique%": 70.21,
                         "top5values": [
+                            "4058167228 (154)",
+                            "(773) 220\u00ad5786 (58)",
+                            "7343953658 (50)",
                             "(877) 774-4779 (43)",
-                            "0000000000 (40)",
-                            "(801) 243-0544 (37)",
-                            "(800) 561-8711 (37)",
-                            "(385) 203-8556 (32)"
+                            "0 (40)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "FAX_PHONE_NUMBER",
+                    "mapping": "%(fax)s",
+                    "statistics": {
+                        "columnName": "fax",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "274-7760 (1)",
+                            "234-206-4042 (1)",
+                            "7407924610 (1)"
                         ]
                     }
                 },
@@ -122,14 +136,14 @@
                     "mapping": "%(email)s",
                     "statistics": {
                         "columnName": "email",
-                        "populated%": 5.66,
-                        "unique%": 70.86,
+                        "populated%": 8.77,
+                        "unique%": 80.09,
                         "top5values": [
-                            "priya@medmen.com (24)",
-                            "vikhong1@yahoo.com (16)",
-                            "license@pmcoc.com (14)",
-                            "scott@lakush.com (14)",
-                            "gene@gonzalezholdings.com (14)"
+                            "MATT@STACYLEGALGROUP.COM (165)",
+                            "vince@jgrown.com (50)",
+                            "BTJ@BRIANTEDJONES.COM (33)",
+                            "BUD@NEWHEALTHOK.COM (24)",
+                            "kriggs@colestl.com (20)"
                         ]
                     }
                 },
@@ -138,14 +152,14 @@
                     "mapping": "%(website)s",
                     "statistics": {
                         "columnName": "website",
-                        "populated%": 1.0,
-                        "unique%": 55.66,
+                        "populated%": 0.48,
+                        "unique%": 71.38,
                         "top5values": [
-                            "www.medmen.com (15)",
-                            "www.ultrahealth.com (14)",
-                            "www.gocaliva.com (10)",
-                            "www.rgreenleaf.com (10)",
-                            "www.papaandbarkley.com (9)"
+                            "www.ultrahealth.com (20)",
+                            "s (18)",
+                            "www.pecosvalleyproduction.com (9)",
+                            "https://www.myherbology.com (9)",
+                            "www.mainewellness.org/ (8)"
                         ]
                     }
                 },
@@ -154,14 +168,14 @@
                     "mapping": "%(Image_URL)s",
                     "statistics": {
                         "columnName": "Image_URL",
-                        "populated%": 10.06,
-                        "unique%": 2.09,
+                        "populated%": 15.54,
+                        "unique%": 2.36,
                         "top5values": [
+                            "https://omma.ok.gov/sites/g/files/gmc736/f/omma_growers_list.pdf (5914)",
                             "https://tax.nv.gov/uploadedFiles/taxnvgov/Content/FAQs/CURRENT%20LICENSE'S%20as%20of%20August%201,%202019%20(7).pdf (5795)",
                             "https://lcb.wa.gov/sites/default/files/publications/Public_Records/2019/MarijuanaApplicants.xls (3336)",
-                            "https://www.tn.gov/content/dam/tn/agriculture/documents/industrial-hemp/hemp-grower-list-8.2.19.pdf (3099)",
-                            "https://health.mo.gov/safety/medical-marijuana/pdf/facility-applicant-identifying-info.pdf (2265)",
-                            "https://www.oregon.gov/olcc/marijuana/Documents/MarijuanaLicenses_Approved.xlsx (2249)"
+                            "https://www.tn.gov/content/dam/tn/agriculture/documents/industrial-hemp/hemp-grower-list-8.2.19.pdf (3100)",
+                            "https://health.mo.gov/safety/medical-marijuana/pdf/facility-applicant-identifying-info.pdf (2265)"
                         ]
                     }
                 },
@@ -171,13 +185,13 @@
                     "statistics": {
                         "columnName": "page_URL",
                         "populated%": 99.97,
-                        "unique%": 1.78,
+                        "unique%": 1.85,
                         "top5values": [
-                            "https://codor.mylicense.com/MED_Verification/Search.aspx (106555)",
-                            "www.nominodata.com (40869)",
-                            "https://aca6.accela.com/CALCANNABIS/Cap/CapHome.aspx?module=Licenses (12706)",
-                            "http://omma.ok.gov/list-of-businesses (8257)",
-                            "https://online.bcc.ca.gov/bcc/customization/bcc/cap/licenseSearch.aspx (6211)"
+                            "https://codor.mylicense.com/med_verification/Search.aspx (110220)",
+                            "www.nominodata.com (40876)",
+                            "https://aca6.accela.com/CALCANNABIS/Cap/CapHome.aspx?module=Licenses (11581)",
+                            "https://omma.ok.gov/list-of-businesses (9435)",
+                            "https://tax.nv.gov/FAQs/Marijuana_License_Application_Information_-_NEW/ (5795)"
                         ]
                     }
                 },
@@ -189,11 +203,11 @@
                         "populated%": 99.97,
                         "unique%": 0.04,
                         "top5values": [
-                            "Colorado Department of Revenue (112692)",
-                            "Owners and Agents (40869)",
-                            "California Department of Food and Agriculture (12706)",
-                            "Oklahoma Medical Marijuana Authority (8257)",
-                            "Califronia Bureau of Cannabis Control (6211)"
+                            "Colorado Department of Revenue (113083)",
+                            "Owners and Agents (40876)",
+                            "California Department of Food and Agriculture (11581)",
+                            "Oklahoma Medical Marijuana Authority (5923)",
+                            "State of Nevadad Department of Taxation (5795)"
                         ]
                     }
                 },
@@ -202,14 +216,14 @@
                     "mapping": "%(type)s",
                     "statistics": {
                         "columnName": "type",
-                        "populated%": 99.79,
-                        "unique%": 0.2,
+                        "populated%": 98.2,
+                        "unique%": 0.21,
                         "top5values": [
-                            "Support (73902)",
-                            "Key (24618)",
+                            "Support (72765)",
+                            "Key (23301)",
                             "AGENT (23172)",
-                            "agent (6916)",
-                            "Licensed Grower (4788)"
+                            "Employee (9588)",
+                            "agent (6916)"
                         ]
                     }
                 },
@@ -218,14 +232,14 @@
                     "mapping": "%(Listingdate)s",
                     "statistics": {
                         "columnName": "Listingdate",
-                        "populated%": 15.0,
-                        "unique%": 3.17,
+                        "populated%": 11.36,
+                        "unique%": 4.0,
                         "top5values": [
-                            "12/1/2018 (4321)",
-                            "1/1/2020 (2494)",
-                            "6/1/2019 (1462)",
-                            "12/1/2099 (1107)",
-                            "3/1/2018 (928)"
+                            "12/1/2018 (3290)",
+                            "6/1/2019 (1455)",
+                            "7/1/2019 (954)",
+                            "5/1/2019 (663)",
+                            "6/1/2020 (525)"
                         ]
                     }
                 },
@@ -234,92 +248,92 @@
                     "mapping": "%(remarks)s",
                     "statistics": {
                         "columnName": "remarks",
-                        "populated%": 66.44,
-                        "unique%": 3.19,
+                        "populated%": 64.48,
+                        "unique%": 3.39,
                         "top5values": [
-                            "Expired (50119)",
-                            "Approved (44820)",
-                            "Voluntary Surrender (13669)",
-                            "Inactive (7664)",
-                            "Active (7381)"
+                            "Expired (54262)",
+                            "Approved (41203)",
+                            "Voluntary Surrender (12605)",
+                            "Inactive (5752)",
+                            "Active (5298)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ADDR_LINE1",
+                    "attribute": "BUSINESS_ADDR_LINE1",
                     "mapping": "%(Address)s",
                     "statistics": {
                         "columnName": "Address",
-                        "populated%": 15.27,
-                        "unique%": 67.41,
+                        "populated%": 10.27,
+                        "unique%": 79.1,
                         "top5values": [
-                            "OAKLAND (624)",
-                            "LOS ANGELES (337)",
-                            "SACRAMENTO (237)",
-                            "SAN FRANCISCO (142)",
-                            "LONG BEACH (128)"
+                            "1619 E EL CAMINO DR (61)",
+                            "RETAIL TITLE CERTIFICATE (38)",
+                            "Highway V Parcel #14-2-04-0-000-025.002 (18)",
+                            "14655 Prospect Ave (15)",
+                            "520 S FOURTH ST 2ND FL (14)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ADDR_CITY",
+                    "attribute": "BUSINESS_ADDR_CITY",
                     "mapping": "%(City)s",
                     "statistics": {
                         "columnName": "City",
-                        "populated%": 21.73,
-                        "unique%": 10.0,
+                        "populated%": 21.84,
+                        "unique%": 10.66,
                         "top5values": [
-                            "Denver (2169)",
-                            "Las Vegas (1783)",
-                            "OKLAHOMA CITY (1288)",
+                            "Las Vegas (1784)",
                             "North Las Vegas (1155)",
-                            "TULSA (709)"
+                            "OKLAHOMA CITY (1092)",
+                            "Denver (1060)",
+                            "Unincorporated Clark (663)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ADDR_STATE",
+                    "attribute": "BUSINESS_ADDR_STATE",
                     "mapping": "%(province)s",
                     "statistics": {
                         "columnName": "province",
-                        "populated%": 94.05,
+                        "populated%": 94.06,
                         "unique%": 0.03,
                         "top5values": [
-                            "CO (117207)",
-                            "CA (28796)",
-                            "OK (13711)",
-                            "NV (7828)",
-                            "OR (7058)"
+                            "CO (117619)",
+                            "CA (24430)",
+                            "OK (14889)",
+                            "NV (7836)",
+                            "OR (7079)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ADDR_POSTAL_CODE",
+                    "attribute": "BUSINESS_ADDR_POSTAL_CODE",
                     "mapping": "%(postcode)s",
                     "statistics": {
                         "columnName": "postcode",
-                        "populated%": 18.55,
-                        "unique%": 21.63,
+                        "populated%": 15.32,
+                        "unique%": 21.11,
                         "top5values": [
-                            "80216 (532)",
-                            "80223 (461)",
-                            "80239 (256)",
-                            "80204 (210)",
-                            "81007 (185)"
+                            "80223 (241)",
+                            "80216 (231)",
+                            "73010 (193)",
+                            "73401 (164)",
+                            "80239 (162)"
                         ]
                     }
                 },
                 {
-                    "attribute": "ADDR_COUNTRY",
+                    "attribute": "BUSINESS_ADDR_COUNTRY",
                     "mapping": "%(Country)s",
                     "statistics": {
                         "columnName": "Country",
-                        "populated%": 98.29,
+                        "populated%": 98.3,
                         "unique%": 0.0,
                         "top5values": [
-                            "USA (211524)",
+                            "USA (213186)",
                             "US (10620)",
-                            "Canada (248)",
+                            "Canada (423)",
                             "CAN (1)"
                         ]
                     }
@@ -329,18 +343,18 @@
                     "mapping": "%(Alias_name)s",
                     "statistics": {
                         "columnName": "Alias_name",
-                        "populated%": 39.16,
-                        "unique%": 52.88,
+                        "populated%": 38.18,
+                        "unique%": 54.8,
                         "top5values": [
                             "IRON ANGEL II, LLC (243)",
-                            "CENTRAL COAST AG FARMING, LLC (202)",
-                            "Native Roots (169)",
-                            "The Green Solution (132)",
+                            "CENTRAL COAST AG FARMING, LLC (203)",
+                            "Native Roots (147)",
+                            "The Green Solution (116)",
                             "THC FARMS (112)"
                         ]
                     }
                 },
-                {
+{
                     "attribute": "GROUP_ASSOCIATION_ORG_NAME",
                     "mapping": "%(group_association_org_name)s"
                 },
@@ -356,7 +370,8 @@
                         "populated%": 100.0,
                         "unique%": 0.0,
                         "top5values": [
-                            "MJ (226251)"
+                            "MJ (222355)",
+                            "MW (5751)"
                         ]
                     }
                 },
@@ -366,9 +381,9 @@
                     "statistics": {
                         "columnName": "timestamp",
                         "populated%": 100.0,
-                        "unique%": 0.14,
+                        "unique%": 0.16,
                         "top5values": [
-                            "2/10/2019 21:53:48 (10535)",
+                            "2/10/2019 21:53:48 (10527)",
                             "12/12/2019 11:22:28 (4200)",
                             "12/12/2019 11:22:31 (4200)",
                             "12/12/2019 11:22:32 (4000)",
@@ -384,8 +399,8 @@
                         "populated%": 100.0,
                         "unique%": 0.01,
                         "top5values": [
-                            "1 (157756)",
-                            "0 (68464)",
+                            "1 (165576)",
+                            "0 (62499)",
                             "2 (1)",
                             "3 (1)",
                             "4 (1)"
