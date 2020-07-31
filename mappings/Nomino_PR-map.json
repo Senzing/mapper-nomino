@@ -1,0 +1,642 @@
+{
+    "input": {
+        "inputFileName": "Nomino/Pharma_Risk/Pharma_Risk_1219-2.csv",
+        "fieldDelimiter": ",",
+        "columnHeaders": [
+            "riskfeedID",
+            "OriginalID",
+            "namefull",
+            "courtesytitle",
+            "First",
+            "Middle",
+            "Last",
+            "Suffix",
+            "Scriptname",
+            "Title",
+            "eyes",
+            "hair",
+            "weight",
+            "height",
+            "marks",
+            "Sex",
+            "Languages",
+            "TIN",
+            "documents",
+            "POB",
+            "DOB",
+            "citizenship",
+            "phone",
+            "fax",
+            "email",
+            "website",
+            "constituancy",
+            "political_party",
+            "Image_URL",
+            "page_URL",
+            "Source",
+            "type",
+            "offense",
+            "wantedby",
+            "Program",
+            "Legalbasis",
+            "Listingdate",
+            "Call_sign",
+            "Vess_type",
+            "Tonnage",
+            "GRT",
+            "Vess_Flag",
+            "Vess_owner",
+            "remarks",
+            "Address",
+            "City",
+            "province",
+            "postcode",
+            "Country",
+            "Address_remarks",
+            "Alias_type",
+            "Alias_name",
+            "riskcode",
+            "active",
+            "timestamp",
+            "Person"
+        ]
+    },
+    "calculations": [
+        {"entity_type": "'PERSON' if rowData['type'] == 'INDIV' else 'ORGANIZATION'"},
+        {"name_full": "rowData['namefull'] if rowData['entity_type'] == 'PERSON' and rowData['namefull'] else ''"},
+        {"name_first": "rowData['First'] if rowData['entity_type'] == 'PERSON' and rowData['First'] else ''"},
+        {"name_middle": "rowData['Middle'] if rowData['entity_type'] == 'PERSON' and rowData['Middle'] else ''"},
+        {"name_last": "rowData['Last'] if rowData['entity_type'] == 'PERSON' and rowData['Last'] else ''"},
+        {"name_org": "rowData['namefull'] if rowData['entity_type'] != 'PERSON' else ''"},
+        {"addr_full_org": "rowData['Address'] + ' ' + rowData['City'] + ' ' + rowData['province'] + ' ' + rowData['postcode'] + ' ' + rowData['Country'] if rowData['entity_type'] == 'ORGANIZATION' else ''"},
+        {"addr_full_per": "rowData['Address'] + ' ' + rowData['City'] + ' ' + rowData['province'] + ' ' + rowData['postcode'] + ' ' + rowData['Country'] if rowData['entity_type'] != 'ORGANIZATION' else ''"},
+        {"date_of_birth": "str(datetime.strptime(rowData['DOB'], '%Y-%m-%d %H:%M:%S').date()) if rowData['DOB'] else ''"}
+    ],
+    "outputs": [
+        {
+            "data_source": "NOMINO-PHARMA_RISK",
+            "entity_type": "%(entity_type)s",
+            "record_id": "%(riskfeedID)s",
+            "attributes": [
+                {
+                    "attribute": "RECORD_TYPE",
+                    "mapping": "%(entity_type)s"
+                },
+                {
+                    "attribute": "RiskFeedID",
+                    "mapping": "%(riskfeedID)s",
+                    "statistics": {
+                        "columnName": "riskfeedID",
+                        "populated%": 100.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "221412391 (1)",
+                            "221412392 (1)",
+                            "221412393 (1)",
+                            "221412394 (1)",
+                            "221342429 (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "OriginalID",
+                    "mapping": "%(OriginalID)s",
+                    "statistics": {
+                        "columnName": "OriginalID",
+                        "populated%": 32.79,
+                        "unique%": 96.27,
+                        "top5values": [
+                            "1220423 (7)",
+                            "1.04E+11 (6)",
+                            "2427358 (6)",
+                            "3002906944 (6)",
+                            "3000007921 (6)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "NAME_FULL",
+                    "mapping": "%(name_full)s"
+                },
+                {
+                    "attribute": "NAME_ORG",
+                    "mapping": "%(name_org)s"
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(namefull)s",
+                    "statistics": {
+                        "columnName": "namefull",
+                        "populated%": 99.95,
+                        "unique%": 72.82,
+                        "top5values": [
+                            "McKesson Medical-Surgical Inc. (611)",
+                            "Airgas Usa, LLC (436)",
+                            "Exel Inc. (388)",
+                            "Medline Industries, Inc. (339)",
+                            "UPS Supply Chain Solutions, Inc. (331)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "NAME_FIRST",
+                    "mapping": "%(name_first)s",
+                    "statistics": {
+                        "columnName": "First",
+                        "populated%": 62.91,
+                        "unique%": 16.2,
+                        "top5values": [
+                            "MICHAEL (874)",
+                            "JOHN (872)",
+                            "JAMES (826)",
+                            "ROBERT (825)",
+                            "DAVID (725)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "NAME_MIDDLE",
+                    "mapping": "%(name_middle)s",
+                    "statistics": {
+                        "columnName": "Middle",
+                        "populated%": 46.31,
+                        "unique%": 15.88,
+                        "top5values": [
+                            "A (2567)",
+                            "L (2396)",
+                            "M (2281)",
+                            "J (1696)",
+                            "ANN (1631)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "NAME_LAST",
+                    "mapping": "%(name_last)s",
+                    "statistics": {
+                        "columnName": "Last",
+                        "populated%": 62.91,
+                        "unique%": 40.69,
+                        "top5values": [
+                            "SMITH (593)",
+                            "JOHNSON (509)",
+                            "WILLIAMS (441)",
+                            "BROWN (424)",
+                            "JONES (410)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "NAME_SUFFIX",
+                    "mapping": "%(Suffix)s",
+                    "statistics": {
+                        "columnName": "Suffix",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "IV (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "title",
+                    "mapping": "%(Title)s",
+                    "statistics": {
+                        "columnName": "Title",
+                        "populated%": 0.06,
+                        "unique%": 35.48,
+                        "top5values": [
+                            "Executive Director (26)",
+                            "Registrar (10)",
+                            "Executive Secretary (5)",
+                            "Board Administrator (2)",
+                            "Executive Officer (2)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "eyes",
+                    "mapping": "%(eyes)s",
+                    "statistics": {
+                        "columnName": "eyes",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "Brown (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "hair",
+                    "mapping": "%(hair)s",
+                    "statistics": {
+                        "columnName": "hair",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "Black (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "GENDER",
+                    "mapping": "%(Sex)s",
+                    "statistics": {
+                        "columnName": "Sex",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "Male (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "DATE_OF_BIRTH",
+                    "mapping": "%(date_of_birth)s",
+                    "statistics": {
+                        "columnName": "DOB",
+                        "populated%": 62.02,
+                        "unique%": 29.97,
+                        "top5values": [
+                            "1967-01-23 00:00:00 (16)",
+                            "1955-09-21 00:00:00 (15)",
+                            "1962-11-04 00:00:00 (15)",
+                            "1962-01-16 00:00:00 (15)",
+                            "1969-08-28 00:00:00 (15)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "PHONE_NUMBER",
+                    "mapping": "%(phone)s",
+                    "statistics": {
+                        "columnName": "phone",
+                        "populated%": 25.06,
+                        "unique%": 4.73,
+                        "top5values": [
+                            "1-614-553-3076 (2025)",
+                            "1-614-865-8500 (648)",
+                            "1-845-544-2482 (644)",
+                            "1-847-643-4508 (616)",
+                            "1-651-686-1600 (517)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "FAX_PHONE_NUMBER",
+                    "mapping": "%(fax)s",
+                    "statistics": {
+                        "columnName": "fax",
+                        "populated%": 0.06,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "205/981-2330 (1)",
+                            "907/465-2974 (1)",
+                            "602/771-2749 (1)",
+                            "501/682-0195 (1)",
+                            "916/574-8618 (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "EMAIL_ADDRESS",
+                    "mapping": "%(email)s",
+                    "statistics": {
+                        "columnName": "email",
+                        "populated%": 25.01,
+                        "unique%": 4.66,
+                        "top5values": [
+                            "GMB-Facility-Licensing@cardinalhealth.com (1711)",
+                            "mleonard@medline.com (616)",
+                            "Regulatory@dhl.com (585)",
+                            "theresa.franz-scurr@pattersoncompanies.com (367)",
+                            "prusso@msdistributors.com (296)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Image_URL",
+                    "mapping": "%(Image_URL)s",
+                    "statistics": {
+                        "columnName": "Image_URL",
+                        "populated%": 0.01,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "https://oig.hhs.gov/fraud/fugitives/images/bio_ohaka.png (1)",
+                            "https://oig.hhs.gov/fraud/fugitives/images/bio_moreno_eduardo.png (1)",
+                            "https://oig.hhs.gov/fraud/fugitives/images/bio_wehbe_tarek.png (1)",
+                            "https://oig.hhs.gov/fraud/fugitives/images/bio_kheyson_oleg.png (1)",
+                            "https://oig.hhs.gov/fraud/fugitives/images/bio-yervand.png (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Page_URL",
+                    "mapping": "%(page_URL)s",
+                    "statistics": {
+                        "columnName": "page_URL",
+                        "populated%": 100.0,
+                        "unique%": 0.06,
+                        "top5values": [
+                            "https://exclusions.oig.hhs.gov/ (72676)",
+                            "https://www.fda.gov/drugs/drug-supply-chain-security-act-dscsa/annual-reporting-prescription-drug-wholesale-distributors-and-third-party-logistics-providers (27698)",
+                            "https://www.accessdata.fda.gov/scripts/cder/drls/getdrls.cfm (10267)",
+                            "https://oig.hhs.gov/fraud/fugitives/profiles.asp (58)",
+                            "https://nabp.pharmacy/boards-of-pharmacy/ (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Source",
+                    "mapping": "%(Source)s",
+                    "statistics": {
+                        "columnName": "Source",
+                        "populated%": 100.0,
+                        "unique%": 0.0,
+                        "top5values": [
+                            "OIG List of Excluded Individuals/Entities (72676)",
+                            "FDA (37965)",
+                            "National Association of Boards of Pharmacy (63)",
+                            "Office of Inspector General (58)",
+                            "OGI Most Wanted (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Type",
+                    "mapping": "%(type)s",
+                    "statistics": {
+                        "columnName": "type",
+                        "populated%": 100.0,
+                        "unique%": 0.01,
+                        "top5values": [
+                            "INDIV (69559)",
+                            "WDD (24386)",
+                            "Drug Establishments Current Registration (10267)",
+                            "3PL (3312)",
+                            "CORP (3117)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Offense",
+                    "mapping": "%(offense)s",
+                    "statistics": {
+                        "columnName": "offense",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "making false statements and making false statements in a health care matter (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "WantedBy",
+                    "mapping": "%(wantedby)s",
+                    "statistics": {
+                        "columnName": "wantedby",
+                        "populated%": 0.0,
+                        "unique%": 100.0,
+                        "top5values": [
+                            "OGI (1)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Legalbasis)s",
+                    "statistics": {
+                        "columnName": "Legalbasis",
+                        "populated%": 65.61,
+                        "unique%": 0.03,
+                        "top5values": [
+                            "1128b4 (30605)",
+                            "1128a1 (21374)",
+                            "1128a2 (6927)",
+                            "1128a3 (4200)",
+                            "1128a4 (2803)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Listing_Date",
+                    "mapping": "%(Listingdate)s",
+                    "statistics": {
+                        "columnName": "Listingdate",
+                        "populated%": 65.61,
+                        "unique%": 3.12,
+                        "top5values": [
+                            "20/5/2014 (581)",
+                            "20/12/2009 (502)",
+                            "20/8/2015 (488)",
+                            "20/7/2017 (487)",
+                            "20/1/2010 (479)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Remarks",
+                    "mapping": "%(remarks)s",
+                    "statistics": {
+                        "columnName": "remarks",
+                        "populated%": 86.13,
+                        "unique%": 11.54,
+                        "top5values": [
+                            "IND- LIC HC SERV PRO (14797)",
+                            "NURSING PROFESSION (13248)",
+                            "MEDICAL PRACTICE, MD (4648)",
+                            "SKILLED NURSING FAC (4366)",
+                            "INDIVIDUAL (UNAFFILI (3220)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "BUSINESS_ADDR_FULL", 
+                    "mapping": "%(addr_full_org)s" 
+                },
+                {
+                    "attribute": "ADDR_FULL", 
+                    "mapping": "%(addr_full_per)s" 
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Address)s",
+                    "statistics": {
+                        "columnName": "Address",
+                        "populated%": 97.89,
+                        "unique%": 74.38,
+                        "top5values": [
+                            "P O BOX 019120 (96)",
+                            "80 Summit View Lane (94)",
+                            "1302 S 59th St (89)",
+                            "407 New Sanford Road (84)",
+                            "11245 North Distribution Cove (82)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(City)s",
+                    "statistics": {
+                        "columnName": "City",
+                        "populated%": 90.67,
+                        "unique%": 10.62,
+                        "top5values": [
+                            "MIAMI (1902)",
+                            "Memphis (877)",
+                            "PHOENIX (631)",
+                            "LOS ANGELES (611)",
+                            "HOUSTON (558)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(province)s",
+                    "statistics": {
+                        "columnName": "province",
+                        "populated%": 90.66,
+                        "unique%": 0.06,
+                        "top5values": [
+                            "CA (10888)",
+                            "FL (8791)",
+                            "TX (6662)",
+                            "NY (5576)",
+                            "PA (4686)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(postcode)s",
+                    "statistics": {
+                        "columnName": "postcode",
+                        "populated%": 65.67,
+                        "unique%": 23.68,
+                        "top5values": [
+                            "33101 (397)",
+                            "33521 (330)",
+                            "33177 (235)",
+                            "24910 (199)",
+                            "76127 (143)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Country)s",
+                    "statistics": {
+                        "columnName": "Country",
+                        "populated%": 99.95,
+                        "unique%": 0.09,
+                        "top5values": [
+                            "USA (100427)",
+                            "United States (USA) (6153)",
+                            "India (IND) (773)",
+                            "China (CHN) (717)",
+                            "South (KOR) (369)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Address_remarks)s",
+                    "statistics": {
+                        "columnName": "Address_remarks",
+                        "populated%": 24.87,
+                        "unique%": 0.19,
+                        "top5values": [
+                            "US-TX (796)",
+                            "US-KY (774)",
+                            "US-TN (751)",
+                            "US-OH (736)",
+                            "US-MO (726)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Alias_Type",
+                    "mapping": "%(Alias_type)s",
+                    "statistics": {
+                        "columnName": "Alias_type",
+                        "populated%": 25.01,
+                        "unique%": 0.0,
+                        "top5values": [
+                            "Facility Contact Name (27698)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Alias_Name",
+                    "mapping": "%(Alias_name)s",
+                    "statistics": {
+                        "columnName": "Alias_name",
+                        "populated%": 25.01,
+                        "unique%": 4.57,
+                        "top5values": [
+                            "Cynthia Rhodes (2024)",
+                            "John Kropczynski (625)",
+                            "Mary Leonard (604)",
+                            "Jennifer Schneider (591)",
+                            "Theresa Franz-Scurr (367)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Risk_Code",
+                    "mapping": "%(riskcode)s",
+                    "statistics": {
+                        "columnName": "riskcode",
+                        "populated%": 100.0,
+                        "unique%": 0.0,
+                        "top5values": [
+                            "PH (110763)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Active",
+                    "mapping": "%(active)s",
+                    "statistics": {
+                        "columnName": "active",
+                        "populated%": 100.0,
+                        "unique%": 0.0,
+                        "top5values": [
+                            "1 (110763)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "Timestamp",
+                    "mapping": "%(timestamp)s",
+                    "statistics": {
+                        "columnName": "timestamp",
+                        "populated%": 100.0,
+                        "unique%": 0.08,
+                        "top5values": [
+                            "23/12/2019 14:46:34 (72735)",
+                            "19/12/2019 08:04:04 (600)",
+                            "19/12/2019 08:03:58 (600)",
+                            "19/12/2019 08:03:52 (600)",
+                            "19/12/2019 08:04:58 (600)"
+                        ]
+                    }
+                },
+                {
+                    "attribute": "<ignore>",
+                    "mapping": "%(Person)s",
+                    "statistics": {
+                        "columnName": "Person",
+                        "populated%": 34.33,
+                        "unique%": 0.01,
+                        "top5values": [
+                            "0 (37966)",
+                            "1 (62)",
+                            "2 (1)"
+                        ]
+                    }
+                }
+            ]
+        }
+    ]
+}
