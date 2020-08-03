@@ -10,7 +10,7 @@ The mappers are located in the mappings folder. Those currently available are:
 - [Marijuana Related Businesses (MRB)](mappings/Nomino_MRB-map.json)
 - [Pharma Risk (PR)](mappings/Nomino_PR-map.json)
 
-To use these mappers with the [Senzing/mapper-csv](https://github.com/Senzing/mapper-csv) utility apply the Senzing configuration: (config/nomino_config.g2c). This is applied using the G2ConfigTool.py utility, located in the /python/ path of your Senzing API deployment. 
+To use these mappers with the [Senzing/mapper-csv](https://github.com/Senzing/mapper-csv) utility apply the included [Senzing configuration](config/nomino_config.g2c). This is applied using the G2ConfigTool.py utility, located in the /python/ path of your Senzing API deployment. 
 
     ```console
     cd <senzing_root>/python/
