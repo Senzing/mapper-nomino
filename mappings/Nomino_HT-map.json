@@ -30,7 +30,14 @@
         ]
     },
     "calculations": [
-        {"name_full": "rowData['namefull'][0:250] if rowData['namefull'] else ''"}
+        {"name_full": "rowData['namefull'][0:250].encode('ascii', 'ignore').decode() if rowData['namefull'] else ''"},
+        {"name_first": "rowData['First'].encode('ascii', 'ignore').decode() if rowData['First'] else ''"},
+        {"Address": "rowData['Address'].encode('ascii', 'ignore').decode() if rowData['Address'] else ''"},
+        {"City": "rowData['City'].encode('ascii', 'ignore').decode() if rowData['City'] else ''"},
+        {"province": "rowData['province'].encode('ascii', 'ignore').decode() if rowData['province'] else ''"},
+        {"postcode": "rowData['postcode'].encode('ascii', 'ignore').decode() if rowData['postcode'] else ''"},
+        {"Country": "rowData['Country'].encode('ascii', 'ignore').decode() if rowData['Country'] else ''"},
+        {"Alias_name": "rowData['Alias_name'].encode('ascii', 'ignore').decode() if rowData['Alias_name'] else ''"}
     ],
     "outputs": [
         {
@@ -71,8 +78,8 @@
                     }
                 },
                 {
-                    "attribute": "FirstName",
-                    "mapping": "%(First)s",
+                    "attribute": "NAME_FIRST",
+                    "mapping": "%(name_first)s",
                     "statistics": {
                         "columnName": "First",
                         "populated%": 5.34,
