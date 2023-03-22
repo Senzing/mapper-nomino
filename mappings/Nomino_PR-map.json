@@ -62,25 +62,25 @@
         ]
     },
     "calculations": [
-        {"entity_type": "'PERSON' if rowData['type'] == 'INDIV' else 'ORGANIZATION'"},
-        {"name_full": "rowData['namefull'] if rowData['entity_type'] == 'PERSON' and rowData['namefull'] else ''"},
-        {"name_first": "rowData['First'] if rowData['entity_type'] == 'PERSON' and rowData['First'] else ''"},
-        {"name_middle": "rowData['Middle'] if rowData['entity_type'] == 'PERSON' and rowData['Middle'] else ''"},
-        {"name_last": "rowData['Last'] if rowData['entity_type'] == 'PERSON' and rowData['Last'] else ''"},
-        {"name_org": "rowData['namefull'] if rowData['entity_type'] != 'PERSON' else ''"},
-        {"addr_full_org": "rowData['Address'] + ' ' + rowData['City'] + ' ' + rowData['province'] + ' ' + rowData['postcode'] + ' ' + rowData['Country'] if rowData['entity_type'] == 'ORGANIZATION' else ''"},
-        {"addr_full_per": "rowData['Address'] + ' ' + rowData['City'] + ' ' + rowData['province'] + ' ' + rowData['postcode'] + ' ' + rowData['Country'] if rowData['entity_type'] != 'ORGANIZATION' else ''"},
+        {"record_type": "'PERSON' if rowData['type'] == 'INDIV' else 'ORGANIZATION'"},
+        {"name_full": "rowData['namefull'] if rowData['record_type'] == 'PERSON' and rowData['namefull'] else ''"},
+        {"name_first": "rowData['First'] if rowData['record_type'] == 'PERSON' and rowData['First'] else ''"},
+        {"name_middle": "rowData['Middle'] if rowData['record_type'] == 'PERSON' and rowData['Middle'] else ''"},
+        {"name_last": "rowData['Last'] if rowData['record_type'] == 'PERSON' and rowData['Last'] else ''"},
+        {"name_org": "rowData['namefull'] if rowData['record_type'] != 'PERSON' else ''"},
+        {"addr_full_org": "rowData['Address'] + ' ' + rowData['City'] + ' ' + rowData['province'] + ' ' + rowData['postcode'] + ' ' + rowData['Country'] if rowData['record_type'] == 'ORGANIZATION' else ''"},
+        {"addr_full_per": "rowData['Address'] + ' ' + rowData['City'] + ' ' + rowData['province'] + ' ' + rowData['postcode'] + ' ' + rowData['Country'] if rowData['record_type'] != 'ORGANIZATION' else ''"},
         {"date_of_birth": "str(datetime.strptime(rowData['DOB'], '%Y-%m-%d %H:%M:%S').date()) if rowData['DOB'] else ''"}
     ],
     "outputs": [
         {
             "data_source": "NOMINO-PHARMA_RISK",
-            "entity_type": "%(entity_type)s",
+            "record_type": "%(record_type)s",
             "record_id": "%(riskfeedID)s",
             "attributes": [
                 {
                     "attribute": "RECORD_TYPE",
-                    "mapping": "%(entity_type)s"
+                    "mapping": "%(record_type)s"
                 },
                 {
                     "attribute": "RiskFeedID",
