@@ -29,7 +29,7 @@
         ]
     },
     "calculations": [
-        {"entity_type": "'PERSON' if rowData['Person'] == '1' else 'ORGANIZATION'"},
+        {"record_type": "'PERSON' if rowData['Person'] == '1' else 'ORGANIZATION'"},
         {"name_full": "rowData['namefull'] if rowData['Person'] == '1' else ''"},
         {"name_org": "rowData['namefull'] if rowData['Person'] != '1' else ''"},
         {"group_association_org_name": "rowData['Alias_name'] if rowData['Person'] == '1' else ''"},
@@ -38,12 +38,12 @@
     "outputs": [
         {
             "data_source": "NOMINO-MRB",
-            "entity_type": "%(entity_type)s",
+            "record_type": "%(record_type)s",
             "record_id": "%(riskfeedID)s",
             "attributes": [
                 {   
                     "attribute": "RECORD_TYPE",
-                    "mapping": "%(entity_type)s"
+                    "mapping": "%(record_type)s"
                 },
                 {
                     "attribute": "risk_feed_id",

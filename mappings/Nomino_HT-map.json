@@ -42,7 +42,6 @@
     "outputs": [
         {
             "data_source": "NOMINO-HUMAN_TRAFFIC",
-            "entity_type": "GENERIC",
             "record_id": "%(riskfeedID)s",
             "attributes": [
                 {
