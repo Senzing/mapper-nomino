@@ -2,23 +2,59 @@
 
 ## Overview
 
-The mapping files in this project are for use with [Senzing/mapper-csv](https://github.com/Senzing/mapper-csv). Complete instructions on using these mapping files can be found under the mapper-csv repository. 
+This mapper converts Nomino data csv files into json files ready to load into Senzing.  You can purchase Nomino data at [https://www.nominodata.com](https://www.nominodata.com/)
 
-The mappers are located in the mappings folder. Those currently available are:
+Usage:
 
-- [Human Trafficking (HT)](mappings/Nomino_HT-map.json)
-- [Marijuana Related Businesses (MRB)](mappings/Nomino_MRB-map.json)
-- [Pharma Risk (PR)](mappings/Nomino_PR-map.json)
+```console
+python3 nomino-mapper.py --help
+usage: nomino-mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-l LOG_FILE] [-d DATA_SOURCE]
 
-To use these mappers with the [Senzing/mapper-csv](https://github.com/Senzing/mapper-csv) utility apply the included [Senzing configuration](config/nomino_config.g2c). This is applied using the G2ConfigTool.py utility, located in the /python/ path of your Senzing API deployment. 
-    
-    cd <senzing_root>/python/
-    ./G2ConfigTool.py <nomino_repository>/config/nomino_config.g2c
-    
-Basic example command using mapper-csv:
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE, --input_file INPUT_FILE
+                        the name of the input file
+  -o OUTPUT_FILE, --output_file OUTPUT_FILE
+                        the name of the output file
+  -l LOG_FILE, --log_file LOG_FILE
+                        optional name of the statistics log file
+  -d DATA_SOURCE, --data_source DATA_SOURCE
+                        the data source code to use, default="NOMINO"
+```
 
-    cd <git_repos>/mapper-csv
-    ./csv_mapper.py -m ../mapper-nomino/mappings/Nomino_HT-map.json -i <data_path>/ht_active_072420.csv -o <data_path>ht_active_072420-mapped.json
+Typical Use:
 
-This is a community site, we welcome additional mapping files as users map additional Nomino feeds.
+```console
+python3 nomino-mapper.py -i input/riskcodeWL.csv -o output/riskcode-WL.json
+```
 
+- You can add the -l parameter to get stats and examples of the mapped file.
+- You can add the -d parameter to change the data source code from the default.  You might want to do this if you want to have a different data source code for each Nomino risk code.
+
+Configuring Senzing:
+
+Go into the G2ConfigTool.py and add the data source code(s) you decide to use.
+
+```console
+root@995af99a4c9e:/opt/senzing/g2/python# G2ConfigTool.py 
+
+Welcome to the Senzing configuration tool! Type help or ? to list commands
+
+(g2cfg) addDataSource NOMINO
+
+Data source successfully added!
+
+(g2cfg) save
+
+Are you certain you wish to proceed and save changes? (y/n) y
+
+Configuration changes saved!
+
+
+Initializing Senzing engines ...
+
+(g2cfg) quit
+
+```
+
+You are now ready to load the json output file into Senzing using your desired method!
