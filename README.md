@@ -4,7 +4,7 @@
 
 This mapper converts Nomino data csv files into json files ready to load into Senzing.  You can purchase Nomino data at [https://www.nominodata.com](https://www.nominodata.com/)
 
-Usage:
+Full Usage:
 
 ```console
 python3 nomino-mapper.py --help
