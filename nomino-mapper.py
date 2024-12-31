@@ -24,6 +24,13 @@ class mapper():
         self.person_types = ('INDIVIDUAL', 'PERSON', 'P', 'PERSONNE PHYSIQUE', 'PERSONNE MORALE', 'BANNED TERRORIST INDIVIDUAL')
 
     #----------------------------------------
+    def add_to_other_list(self, other_list, raw_data, key):
+            if key not in other_list:
+                other_list[key] = [raw_data.get(key)]
+            else:
+                other_list[key].append(raw_data.get(key))
+
+    #----------------------------------------
     def map(self, raw_data, input_row_num = None):
 
         #--clean values
@@ -35,6 +42,7 @@ class mapper():
         #--place any calculations needed here
 
         record_id = self.compute_record_hash(raw_data, ['Source', 'OriginalID', 'namefull', 'Title','page_URL'])
+        other_list = {}
 
         raw_type = raw_data.get('type', '').upper()
 
@@ -57,8 +65,7 @@ class mapper():
                                             'ADDRESS_LIST': [],
                                             'CONTACT_LIST': [],
                                             'IDENTIFIER_LIST': [],
-                                            'ATTRIBUTE_LIST': [],
-                                            'OTHER_LIST': []}
+                                            'ATTRIBUTE_LIST': []}
 
         # columnName: riskfeedID
         # 100.0 populated, 100.0 unique
@@ -77,7 +84,9 @@ class mapper():
         #      20820 (511)
         #      CAF0010 (400)
         if raw_data.get('OriginalID'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'OriginalID': raw_data.get('OriginalID')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'OriginalID': raw_data.get('OriginalID')})
+            self.add_to_other_list(other_list, raw_data, 'OriginalID')
+
 
         # columnName: namefull
         # 100.0 populated, 64.12 unique
@@ -157,12 +166,28 @@ class mapper():
         #      Haji (249)
         #      Maulavi (202)
         if raw_data.get('Title'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Title': raw_data.get('Title')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Title': raw_data.get('Title')})
+            self.add_to_other_list(other_list, raw_data, 'Title')
 
-        # columnName: marks
-        # 14.75 populated, 0.0 unique
-        #      -0- (39705)
-        #json_data['marks'] = raw_data.get('marks']
+        if raw_data.get('marks'):
+            #self.record_cache[record_id]['OTHER_LIST'].append({'marks': raw_data.get('marks')})
+            self.add_to_other_list(other_list, raw_data, 'marks')
+
+        if raw_data.get('eyes'):
+            #self.record_cache[record_id]['OTHER_LIST'].append({'eyes': raw_data.get('eyes')})
+            self.add_to_other_list(other_list, raw_data, 'eyes')
+
+        if raw_data.get('hair'):
+            #self.record_cache[record_id]['OTHER_LIST'].append({'hair': raw_data.get('hair')})
+            self.add_to_other_list(other_list, raw_data, 'hair')
+
+        if raw_data.get('height'):
+            #self.record_cache[record_id]['OTHER_LIST'].append({'height': raw_data.get('height')})
+            self.add_to_other_list(other_list, raw_data, 'height')
+
+        if raw_data.get('weight'):
+            #self.record_cache[record_id]['OTHER_LIST'].append({'weight': raw_data.get('weight')})
+            self.add_to_other_list(other_list, raw_data, 'weight')
 
         # columnName: Sex
         # 7.85 populated, 0.04 unique
@@ -182,7 +207,8 @@ class mapper():
         #      SK (518)
         #      CS (497)
         if raw_data.get('Languages'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Languages': raw_data.get('Languages')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Languages': raw_data.get('Languages')})
+            self.add_to_other_list(other_list, raw_data, 'Languages')
 
         # columnName: TIN
         # 0.71 populated, 13.74 unique
@@ -192,7 +218,9 @@ class mapper():
         #      11010046398 (57)
         #      103-00653129-22 (56)
         if raw_data.get('TIN'):
-            self.record_cache[record_id]['IDENTIFIER_LIST'].append({'NATIONAL_ID_NUMBER': raw_data.get('TIN')})
+            for tin_str in raw_data.get('TIN').split():
+                if not (tin_str.startswith('(') and tin_str.endswith(')') and len(tin_str) < 5):
+                    self.record_cache[record_id]['IDENTIFIER_LIST'].append({'NATIONAL_ID_NUMBER': tin_str})
 
         # columnName: documents
         # 1.62 populated, 43.84 unique
@@ -202,7 +230,8 @@ class mapper():
         #      (1) D00000897 (2) D00004262 (56)
         #      00814L001424 (55)
         if raw_data.get('documents'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'documents': raw_data.get('documents')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'documents': raw_data.get('documents')})
+            self.add_to_other_list(other_list, raw_data, 'documents')
 
         # columnName: POB
         # 6.41 populated, 7.2 unique
@@ -224,7 +253,8 @@ class mapper():
         #      00/00/1959 (116)
         if raw_data.get('DOB'):
             dob_attr = 'DATE_OF_BIRTH' if record_type == 'PERSON' else 'REGISTRATION_DATE'
-            self.record_cache[record_id]['ATTRIBUTE_LIST'].append({dob_attr: raw_data.get('DOB')})
+            dob_value = raw_data.get('DOB').replace("00/","")
+            self.record_cache[record_id]['ATTRIBUTE_LIST'].append({dob_attr: dob_value})
 
         # columnName: citizenship
         # 5.01 populated, 2.1 unique
@@ -244,7 +274,12 @@ class mapper():
         #      +8 (800) 555-55-50 (4)
         #      +44 0208 895 6910 (3)
         if raw_data.get('phone'):
-            self.record_cache[record_id]['CONTACT_LIST'].append({'PHONE_NUMBER': raw_data.get('phone')})
+            for phone_str in raw_data.get('phone').split(","):
+                self.record_cache[record_id]['CONTACT_LIST'].append({'PHONE_NUMBER': phone_str.strip()})
+
+        if raw_data.get('fax'):
+            for phone_str in raw_data.get('fax').split(","):
+                self.record_cache[record_id]['CONTACT_LIST'].append({'DAX_PHONE_NUMBER': phone_str.strip()})
 
         # columnName: email
         # 0.66 populated, 26.83 unique
@@ -254,7 +289,9 @@ class mapper():
         #      info@ieimil.ir (63)
         #      info@irmig.ir (45)
         if raw_data.get('email'):
-            self.record_cache[record_id]['CONTACT_LIST'].append({'EMAIL_ADDRESS': raw_data.get('email')})
+            for email_str in raw_data.get('email').split():
+                if '@' in email_str:
+                    self.record_cache[record_id]['CONTACT_LIST'].append({'EMAIL_ADDRESS': email_str})
 
         # columnName: website
         # 0.8 populated, 86.8 unique
@@ -274,7 +311,12 @@ class mapper():
         #      561 - General Services (7)
         #      854 - General Services (7)
         if raw_data.get('constituancy'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'constituancy': raw_data.get('constituancy')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'constituancy': raw_data.get('constituancy')})
+            self.add_to_other_list(other_list, raw_data, 'constituancy')
+
+        if raw_data.get('political_party'):
+            #self.record_cache[record_id]['OTHER_LIST'].append({'political_party': raw_data.get('political_party')})
+            self.add_to_other_list(other_list, raw_data, 'political_party')
 
         # columnName: Image_URL
         # 0.49 populated, 43.42 unique
@@ -284,7 +326,8 @@ class mapper():
         #      https://www.mha.gov.in/sites/default/files/2023-03/TERRORIST_ORGANIZATIONS_10032023.pdf (44)
         #      https://www.mha.gov.in/sites/default/files/2023-01/NAMESOFUNLAWFULASSOCIATIONS_20012023.pdf (21)
         if raw_data.get('Image_URL'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Image_URL': raw_data.get('Image_URL')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Image_URL': raw_data.get('Image_URL')})
+            self.add_to_other_list(other_list, raw_data, 'Image_URL')
 
         # columnName: page_URL
         # 99.85 populated, 0.13 unique
@@ -294,7 +337,8 @@ class mapper():
         #      http://www.hm-treasury.gov.uk/fin_sanctions_index.htm (17686)
         #      https://www.dfat.gov.au/international-relations/security/sanctions/Pages/consolidated-list (8295)
         if raw_data.get('page_URL'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'page_URL': raw_data.get('page_URL')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'page_URL': raw_data.get('page_URL')})
+            self.add_to_other_list(other_list, raw_data, 'page_URL')
 
         # columnName: Source
         # 99.85 populated, 0.01 unique
@@ -304,7 +348,8 @@ class mapper():
         #      HM-Treasury Consolidated list of financial sanctions targets (17686)
         #      DFAT - Consolidated list (8295)
         if raw_data.get('Source'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Source': raw_data.get('Source')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Source': raw_data.get('Source')})
+            self.add_to_other_list(other_list, raw_data, 'Source')
 
         # columnName: type
         # 99.54 populated, 0.02 unique
@@ -314,7 +359,8 @@ class mapper():
         #      Special Entity Designation (13941)
         #      P (13531)
         if raw_data.get('type'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'type': raw_data.get('type')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'type': raw_data.get('type')})
+            self.add_to_other_list(other_list, raw_data, 'type')
 
         # columnName: offense
         # 40.17 populated, 0.59 unique
@@ -324,7 +370,8 @@ class mapper():
         #      Z (4397)
         #      03-SDN-01 (4364)
         if raw_data.get('offense'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'offense': raw_data.get('offense')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'offense': raw_data.get('offense')})
+            self.add_to_other_list(other_list, raw_data, 'offense')
 
         # columnName: wantedby
         # 55.3 populated, 0.1 unique
@@ -334,7 +381,8 @@ class mapper():
         #      DOJ (2580)
         #      EPA (2198)
         if raw_data.get('wantedby'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'wantedby': raw_data.get('wantedby')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'wantedby': raw_data.get('wantedby')})
+            self.add_to_other_list(other_list, raw_data, 'wantedby')
 
         # columnName: Program
         # 88.48 populated, 0.35 unique
@@ -344,7 +392,8 @@ class mapper():
         #      UKR (8496)
         #      RUSSIA-EO14024 (5670)
         if raw_data.get('Program'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Program': raw_data.get('Program')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Program': raw_data.get('Program')})
+            self.add_to_other_list(other_list, raw_data, 'Program')
 
         # columnName: Legalbasis
         # 69.94 populated, 0.55 unique
@@ -354,7 +403,8 @@ class mapper():
         #      TAQA (2655)
         #      1 (2503)
         if raw_data.get('Legalbasis'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Legalbasis': raw_data.get('Legalbasis')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Legalbasis': raw_data.get('Legalbasis')})
+            self.add_to_other_list(other_list, raw_data, 'Legalbasis')
 
         # columnName: Listingdate
         # 17.99 populated, 3.58 unique
@@ -364,7 +414,8 @@ class mapper():
         #      2023/03/14 00:00:00.000 (938)
         #      2023/07/21 00:00:00.000 (753)
         if raw_data.get('Listingdate'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Listingdate': raw_data.get('Listingdate')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Listingdate': raw_data.get('Listingdate')})
+            self.add_to_other_list(other_list, raw_data, 'Listingdate')
 
         # columnName: Call_sign
         # 18.05 populated, 0.38 unique
@@ -384,7 +435,8 @@ class mapper():
         #      Crude Oil Tanker (129)
         #      Oil tanker (56)
         if raw_data.get('Vess_type'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Vess_type': raw_data.get('Vess_type')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Vess_type': raw_data.get('Vess_type')})
+            self.add_to_other_list(other_list, raw_data, 'Vess_type')
 
         # columnName: Tonnage
         # 18.05 populated, 0.09 unique
@@ -394,7 +446,8 @@ class mapper():
         #      159,681 (7)
         #      99,144 (6)
         if raw_data.get('Tonnage'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Tonnage': raw_data.get('Tonnage')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Tonnage': raw_data.get('Tonnage')})
+            self.add_to_other_list(other_list, raw_data, 'Tonnage')
 
         # columnName: GRT
         # 18.08 populated, 0.19 unique
@@ -404,7 +457,8 @@ class mapper():
         #      160,930 (14)
         #      165,000 (10)
         if raw_data.get('GRT'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'GRT': raw_data.get('GRT')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'GRT': raw_data.get('GRT')})
+            self.add_to_other_list(other_list, raw_data, 'GRT')
 
         # columnName: Vess_Flag
         # 18.08 populated, 0.08 unique
@@ -424,7 +478,8 @@ class mapper():
         #      Hapjanggang Shipping Corp (10)
         #      Chonmyong Shipping Co (9)
         if raw_data.get('Vess_owner'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Vess_owner': raw_data.get('Vess_owner')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Vess_owner': raw_data.get('Vess_owner')})
+            self.add_to_other_list(other_list, raw_data, 'Vess_owner')
 
         # columnName: remarks
         # 44.08 populated, 40.43 unique
@@ -434,7 +489,8 @@ class mapper():
         #      ; (1625)
         #      12/31/2999 (852)
         if raw_data.get('remarks'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'remarks': raw_data.get('remarks')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'remarks': raw_data.get('remarks')})
+            self.add_to_other_list(other_list, raw_data, 'remarks')
 
         if raw_data.get('Address') or raw_data.get('City') or raw_data.get('province') or raw_data.get('postcode') or raw_data.get('Country'):
             address_data = {}
@@ -499,7 +555,8 @@ class mapper():
         #      NGA (535)
         #      Los Angeles County (399)
         if raw_data.get('Address_remarks'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Address_remarks': raw_data.get('Address_remarks')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Address_remarks': raw_data.get('Address_remarks')})
+            self.add_to_other_list(other_list, raw_data, 'Address_remarks')
 
         # columnName: Alias_type
         # 25.1 populated, 0.08 unique
@@ -509,7 +566,8 @@ class mapper():
         #      Primary name variation (4729)
         #      fka (2792)
         if raw_data.get('Alias_type'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Alias_type': raw_data.get('Alias_type')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Alias_type': raw_data.get('Alias_type')})
+            self.add_to_other_list(other_list, raw_data, 'Alias_type')
 
         # columnName: Alias_name
         # 17.31 populated, 48.8 unique
@@ -519,19 +577,28 @@ class mapper():
         #      BANK VTB OPEN JOINT STOCK COMPANY (72)
         #      BANK VNESHNEY TORGOVLI ROSSIYSKOY FEDERATSII CLOSED JOINT STOCK COMPANY (72)
         if raw_data.get('Alias_name'):
-            self.record_cache[record_id]['NAME_LIST'].append({'ALIAS_NAME_FULL': raw_data.get('Alias_name')})
+            senzing_attr = 'ALIAS_NAME_FULL'
+            # abandoned as too many variations to be fruitful
+            #   sometimes its a person name associated with the organization!
+            #if record_type == 'PERSON':  
+            #    alias_name = raw_data.get('Alias_name').replace(',', ' ').replace('.', ' ') + ' '
+            #    if any(x in alias_name for x in (' COMPANY ', ' LLC ', ' INC ')):
+            #        senzing_attr = 'GROUP_ASSOCIATION_ORG_NAME'
+            self.record_cache[record_id]['NAME_LIST'].append({senzing_attr: raw_data.get('Alias_name')})
 
         # columnName: riskcode
         # 100.0 populated, 0.0 unique
         #      WL (269183)
         if raw_data.get('riskcode'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'riskcode': raw_data.get('riskcode')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'riskcode': raw_data.get('riskcode')})
+            self.add_to_other_list(other_list, raw_data, 'riskcode')
 
         # columnName: active
         # 100.0 populated, 0.0 unique
         #      1 (269183)
         if raw_data.get('active'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'active': raw_data.get('active')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'active': raw_data.get('active')})
+            self.add_to_other_list(other_list, raw_data, 'active')
 
         # columnName: timestamp
         # 100.0 populated, 0.09 unique
@@ -541,14 +608,20 @@ class mapper():
         #      2024/02/05 23:00:35.000000000 (5032)
         #      2024/02/05 23:00:30.000000000 (4998)
         if raw_data.get('timestamp'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'timestamp': raw_data.get('timestamp')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'timestamp': raw_data.get('timestamp')})
+            self.add_to_other_list(other_list, raw_data, 'timestamp')
 
         # columnName: Person
         # 3.05 populated, 0.02 unique
         #      0 (5676)
         #      1 (2532)
         if raw_data.get('Person'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Person': raw_data.get('Person')})
+            #self.record_cache[record_id]['OTHER_LIST'].append({'Person': raw_data.get('Person')})
+            self.add_to_other_list(other_list, raw_data, 'Person')
+
+        for key in other_list:
+            self.record_cache[record_id][key] = ' | '.join(other_list[key])
+
 
         #--remove empty attributes and capture the stats
         #json_data = self.remove_empty_tags(json_data)
@@ -656,7 +729,7 @@ if __name__ == "__main__":
     parser.add_argument('-i', '--input_file', dest='input_file', default = input_file, help='the name of the input file')
     parser.add_argument('-o', '--output_file', dest='output_file', help='the name of the output file')
     parser.add_argument('-l', '--log_file', dest='log_file', help='optional name of the statistics log file')
-    parser.add_argument('-d', '--data_source', dest='data_source', default='NOMINO', help='the data source code to use, default="NOMINO"')
+    parser.add_argument('-d', '--data_source', dest='data_source', default='NOMINODATA', help='the data source code to use, default="NOMINO"')
     args = parser.parse_args()
 
     if not args.input_file or not os.path.exists(args.input_file):
