@@ -2,7 +2,7 @@
 
 ## Overview
 
-This mapper converts Nomino data csv files into json files ready to load into Senzing.  You can purchase Nomino data at [https://www.nominodata.com](https://www.nominodata.com/)
+This mapper converts Nomino data csv files into json files ready to load into Senzing. You can purchase Nomino data at [https://www.nominodata.com]
 
 Full Usage:
 
@@ -29,14 +29,14 @@ python3 nomino-mapper.py -i input/riskcodeWL.csv -o output/riskcode-WL.json
 ```
 
 - You can add the -l parameter to get stats and examples of the mapped file.
-- You can add the -d parameter to change the data source code from the default.  You might want to do this if you want to have a different data source code for each Nomino risk code.
+- You can add the -d parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
 
 Configuring Senzing:
 
 Go into the G2ConfigTool.py and add the data source code(s) you decide to use.
 
 ```console
-root@995af99a4c9e:/opt/senzing/g2/python# G2ConfigTool.py 
+root@995af99a4c9e:/opt/senzing/g2/python# G2ConfigTool.py
 
 Welcome to the Senzing configuration tool! Type help or ? to list commands
 
@@ -58,3 +58,5 @@ Initializing Senzing engines ...
 ```
 
 You are now ready to load the json output file into Senzing using your desired method!
+
+[https://www.nominodata.com]: https://www.nominodata.com/
