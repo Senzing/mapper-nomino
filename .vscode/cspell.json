@@ -6,6 +6,7 @@
   // words - list of words to be always considered correct
   "words": [
     "alturath",
+    "Analysing",
     "Bashnya",
     "Bolshaya",
     "CCLA",
@@ -21,7 +22,9 @@
     "Hapjanggang",
     "ICLA",
     "indexgb",
+    "isort",
     "Kompleks",
+    "kwargs",
     "Legalbasis",
     "Listingdate",
     "Masculin",
@@ -39,6 +42,7 @@
     "Phyongchon",
     "Presnenskaya",
     "pylint",
+    "pytest",
     "RIHS",
     "riskcode",
     "riskfeed",
@@ -49,11 +53,14 @@
     "Scriptname",
     "SDGT",
     "Senzing",
+    "setuptools",
+    "shellcheck",
     "stackoverflow",
     "subrecord",
     "TAQA",
     "TORGOVLI",
     "vangossumconsult",
+    "venv",
     "Vess",
     "VNESHNEY",
     "VNESHTORGBANK",
@@ -73,10 +80,12 @@
     "صرافی",
     "صرافی",
     "مالك",
-    "نورزى",
+    "نورزى"
   ],
   "ignorePaths": [
     ".git/**",
-    ".mypy_cache/**"
+    ".mypy_cache/**",
+    "development-requirements.txt",
+    "documentation-requirements.txt"
   ]
 }
