@@ -34,6 +34,10 @@ Add the `-d` parameter to change the data source code from the default. You migh
 
 ## Mapping Details
 
+Nomino data often contains multiple CSV rows for the same entity, each with different attributes (e.g., separate rows for different addresses or aliases). This mapper groups rows into a single Senzing record by computing a hash of key fields: `Source`, `OriginalID`, `namefull`, `Title`, and `page_URL`. Rows with the same hash are combined, with their attributes merged into the output record.
+
+The mapper also determines the record type (PERSON, ORGANIZATION, VESSEL, or AIRCRAFT) based on the `type` field and other indicators in the data.
+
 See [src/nomino_mapper.py](src/nomino_mapper.py) for field mapping logic. The code is designed to be readable and self-documenting.
 
 ## Configuring Senzing
