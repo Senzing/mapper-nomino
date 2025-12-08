@@ -32,6 +32,10 @@ python3 nomino-mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
 
 Add the `-d` parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
 
+## Mapping Details
+
+See [nomino-mapper.py](nomino-mapper.py) for field mapping logic. The code is designed to be readable and self-documenting.
+
 ## Configuring Senzing
 
 Run the [nomino_config_updates.g2c](nomino_config_updates.g2c) file with the Senzing configuration tool to add the data source.
