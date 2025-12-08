@@ -7,22 +7,6 @@ This mapper converts Nomino data CSV files into JSONL files ready to load into S
 ## Prerequisites
 
 - Python 3.9 or higher
-- [Senzing/mapper-base](https://github.com/Senzing/mapper-base)
-
-## Installation
-
-Place the mapper files in a common directory structure with mapper-base:
-
-```console
-/senzing/mappers/mapper-base
-/senzing/mappers/mapper-nomino
-```
-
-Set the PYTHONPATH to include mapper-base:
-
-```console
-export PYTHONPATH=$PYTHONPATH:/senzing/mappers/mapper-base
-```
 
 ## Usage
 
