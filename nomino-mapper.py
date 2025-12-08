@@ -6,8 +6,6 @@ import argparse
 import csv
 import json
 import time
-from datetime import datetime
-from dateutil.parser import parse as dateparse
 import signal
 import random
 import hashlib
@@ -654,26 +652,6 @@ class mapper():
             string_to_hash = json.dumps(target_dict, sort_keys=True)
         return hashlib.md5(bytes(string_to_hash, 'utf-8')).hexdigest()
 
-    #----------------------------------------
-    def format_date(self, raw_date):
-        try: 
-            return datetime.strftime(dateparse(raw_date), '%Y-%m-%d')
-        except: 
-            self.update_stat('!INFO', 'BAD_DATE', raw_date)
-            return ''
-
-    #----------------------------------------
-    def remove_empty_tags(self, d):
-        if isinstance(d, dict):
-            for  k, v in list(d.items()):
-                if v is None or len(str(v).strip()) == 0:
-                    del d[k]
-                else:
-                    self.remove_empty_tags(v)
-        if isinstance(d, list):
-            for v in d:
-                self.remove_empty_tags(v)
-        return d
 
     #----------------------------------------
     def update_stat(self, cat1, cat2, example=None):
