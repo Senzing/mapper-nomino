@@ -53,9 +53,6 @@ python3 nomino-mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
 
 ## Configuring Senzing
 
-Use the Senzing configuration tool to add the data source code(s) you decide to use:
+Run the [nomino_config_updates.g2c](nomino_config_updates.g2c) file with the Senzing configuration tool to add the data source.
 
-```console
-addDataSource NOMINO
-save
-```
+If you override the default data source code with the `-d` parameter, update the `.g2c` file accordingly.
