@@ -2,9 +2,29 @@
 
 ## Overview
 
-This mapper converts Nomino data csv files into json files ready to load into Senzing.  You can purchase Nomino data at [https://www.nominodata.com](https://www.nominodata.com/)
+This mapper converts Nomino data CSV files into JSONL files ready to load into Senzing. You can purchase Nomino data at [https://www.nominodata.com](https://www.nominodata.com/)
 
-Full Usage:
+## Prerequisites
+
+- Python 3.9 or higher
+- [Senzing/mapper-base](https://github.com/Senzing/mapper-base)
+
+## Installation
+
+Place the mapper files in a common directory structure with mapper-base:
+
+```console
+/senzing/mappers/mapper-base
+/senzing/mappers/mapper-nomino
+```
+
+Set the PYTHONPATH to include mapper-base:
+
+```console
+export PYTHONPATH=$PYTHONPATH:/senzing/mappers/mapper-base
+```
+
+## Usage
 
 ```console
 python3 nomino-mapper.py --help
@@ -22,39 +42,22 @@ optional arguments:
                         the data source code to use, default="NOMINO"
 ```
 
-Typical Use:
+### Example
 
 ```console
-python3 nomino-mapper.py -i input/riskcodeWL.csv -o output/riskcode-WL.json
+python3 nomino-mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
 ```
 
-- You can add the -l parameter to get stats and examples of the mapped file.
-- You can add the -d parameter to change the data source code from the default.  You might want to do this if you want to have a different data source code for each Nomino risk code.
+- Add the `-l` parameter to get stats and examples of the mapped file.
+- Add the `-d` parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
 
-Configuring Senzing:
+## Configuring Senzing
 
-Go into the G2ConfigTool.py and add the data source code(s) you decide to use.
+Use the Senzing configuration tool to add the data source code(s) you decide to use:
 
 ```console
-root@995af99a4c9e:/opt/senzing/g2/python# G2ConfigTool.py 
-
-Welcome to the Senzing configuration tool! Type help or ? to list commands
-
-(g2cfg) addDataSource NOMINO
-
-Data source successfully added!
-
-(g2cfg) save
-
-Are you certain you wish to proceed and save changes? (y/n) y
-
-Configuration changes saved!
-
-
-Initializing Senzing engines ...
-
-(g2cfg) quit
-
+addDataSource NOMINO
+save
 ```
 
-You are now ready to load the json output file into Senzing using your desired method!
+You are now ready to load the JSONL output file into Senzing using your desired method!
