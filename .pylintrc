@@ -43,6 +43,7 @@ disable=
     chained-comparison,
     duplicate-code,
     consider-using-dict-items,
+    possibly-used-before-assignment,
 good-names=
     template-python
 ignore=

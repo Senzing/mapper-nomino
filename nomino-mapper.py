@@ -6,7 +6,6 @@ import argparse
 import csv
 import json
 import time
-import signal
 import random
 import hashlib
 
@@ -687,16 +686,9 @@ class mapper():
                         self.update_stat(record_type, key2, subrecord[key2])
 
 #----------------------------------------
-def signal_handler(signal, frame):
-    print('USER INTERUPT! Shutting down ... (please wait)')
-    global shut_down
-    shut_down = True
-
-#----------------------------------------
 if __name__ == "__main__":
     proc_start_time = time.time()
     shut_down = False
-    signal.signal(signal.SIGINT, signal_handler)
 
     input_file = 'riskcodeWL.csv'
     csv_dialect = 'excel'
@@ -720,26 +712,25 @@ if __name__ == "__main__":
     mapper = mapper()
 
     input_row_count = 0
-    for input_row in csv.DictReader(input_file_handle, dialect=csv_dialect):
-        mapper.map(input_row, input_row_count)
-        input_row_count += 1
-        if input_row_count % 1000 == 0:
-            print(f'{input_row_count} rows read')
-        if shut_down:
-            break
-
     output_row_count = 0
-    if not shut_down:
+    try:
+        for input_row in csv.DictReader(input_file_handle, dialect=csv_dialect):
+            mapper.map(input_row, input_row_count)
+            input_row_count += 1
+            if input_row_count % 1000 == 0:
+                print(f'{input_row_count} rows read')
+
         for record_id in mapper.record_cache.keys():
             json_data = mapper.record_cache[record_id]
             mapper.capture_mapped_stats(json_data)
             output_file_handle.write(json.dumps(json_data) + '\n')
             output_row_count += 1
-
             if output_row_count % 1000 == 0:
                 print(f'{output_row_count} rows written')
-            if shut_down:
-                break
+
+    except KeyboardInterrupt:
+        shut_down = True
+        print('\nUSER INTERRUPT! Shutting down ...')
 
     elapsed_mins = round((time.time() - proc_start_time) / 60, 1)
     run_status = ('completed in' if not shut_down else 'aborted after') + ' %s minutes' % elapsed_mins
@@ -753,6 +744,5 @@ if __name__ == "__main__":
         with open(args.log_file, 'w') as outfile:
             json.dump(mapper.stat_pack, outfile, indent=4, sort_keys = True)
         print('Mapping stats written to %s\n' % args.log_file)
-
 
     sys.exit(0)
