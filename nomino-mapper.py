@@ -21,14 +21,14 @@ class mapper():
         self.load_reference_data()
         self.stat_pack = {}
         self.record_cache = {}
-        self.person_types = ('INDIVIDUAL', 'PERSON', 'P', 'PERSONNE PHYSIQUE', 'PERSONNE MORALE', 'BANNED TERRORIST INDIVIDUAL')
+        #self.person_types = ('INDIVIDUAL', 'PERSON', 'P', 'PERSONNE PHYSIQUE', 'PERSONNE MORALE', 'BANNED TERRORIST INDIVIDUAL')
 
     #----------------------------------------
     def add_to_other_list(self, other_list, raw_data, key):
-            if key not in other_list:
-                other_list[key] = [raw_data.get(key)]
-            else:
-                other_list[key].append(raw_data.get(key))
+        if key not in other_list:
+            other_list[key] = [raw_data.get(key)]
+        else:
+            other_list[key].append(raw_data.get(key))
 
     #----------------------------------------
     def map(self, raw_data, input_row_num = None):
@@ -38,6 +38,8 @@ class mapper():
             raw_data[attribute] = self.clean_value(raw_data[attribute])
 
         #--place any filters needed here
+        #if raw_data.get('Person', '0') == '1':  # no people for now
+        #    return None
 
         #--place any calculations needed here
 
@@ -50,7 +52,8 @@ class mapper():
             record_type = 'AIRCRAFT'
         elif raw_type  in ('VESSEL', 'SHIP') or raw_data.get('Vess_type'):
             record_type = 'VESSEL'
-        elif raw_type in self.person_types or raw_data.get('Person', '0') == '1' or raw_data.get('First'):
+        #elif raw_type in self.person_types or raw_data.get('Person', '0') == '1' or raw_data.get('First'):
+        elif raw_data.get('Person', '0') == '1' or raw_data.get('First'):
             record_type = 'PERSON'
             #if not (raw_type in self.person_types or raw_data.get('Person', '0') == '1'):
             #    input(json.dumps(raw_data, indent=4))
@@ -60,12 +63,7 @@ class mapper():
         if record_id not in self.record_cache:
             self.record_cache[record_id] = {'DATA_SOURCE': args.data_source.upper(),
                                             'RECORD_ID': record_id,
-                                            'RECORD_TYPE': record_type,
-                                            'NAME_LIST': [],
-                                            'ADDRESS_LIST': [],
-                                            'CONTACT_LIST': [],
-                                            'IDENTIFIER_LIST': [],
-                                            'ATTRIBUTE_LIST': []}
+                                            'FEATURES': [{'RECORD_TYPE': record_type}]}
 
         # columnName: riskfeedID
         # 100.0 populated, 100.0 unique
@@ -96,8 +94,8 @@ class mapper():
         #      AL-OMGY AND BROTHERS MONEY EXCHANGE (512)
         #      AERO CONTINENTE S.A (330)
         if raw_data.get('namefull') and not raw_data.get('First'):
-            name_attribute = 'PRIMARY_NAME_FULL' if record_type == 'PERSON' else 'PRIMARY_NAME_ORG'
-            self.record_cache[record_id]['NAME_LIST'].append({name_attribute: raw_data.get('namefull')})
+            name_attribute = 'NAME_FULL' if record_type == 'PERSON' else 'NAME_ORG'
+            self.record_cache[record_id]['FEATURES'].append({name_attribute: raw_data.get('namefull'), 'NAME_TYPE': 'PRIMARY'})
         elif raw_data.get('First') or raw_data.get('Middle') or raw_data.get('Last'):
             parsed_name = {}
             # columnName: courtesytitle
@@ -107,7 +105,7 @@ class mapper():
             #      Ms (15)
             #      MS (2)
             #      DR (2)
-            parsed_name['PRIMARY_NAME_PREFIX'] = raw_data.get('courtesytitle')
+            parsed_name['NAME_PREFIX'] = raw_data.get('courtesytitle')
 
             # columnName: First
             # 56.55 populated, 17.49 unique
@@ -116,7 +114,7 @@ class mapper():
             #      JAMES (1615)
             #      ROBERT (1611)
             #      DAVID (1414)
-            parsed_name['PRIMARY_NAME_FIRST'] = raw_data.get('First')
+            parsed_name['NAME_FIRST'] = raw_data.get('First')
 
             # columnName: Middle
             # 34.55 populated, 12.85 unique
@@ -125,7 +123,7 @@ class mapper():
             #      ANN (2178)
             #      M. (2121)
             #      J. (1849)
-            parsed_name['PRIMARY_NAME_MIDDLE'] = raw_data.get('Middle')
+            parsed_name['NAME_MIDDLE'] = raw_data.get('Middle')
 
             # columnName: Last
             # 58.99 populated, 33.09 unique
@@ -134,7 +132,7 @@ class mapper():
             #      WILLIAMS (688)
             #      JONES (662)
             #      BROWN (649)
-            parsed_name['PRIMARY_NAME_LAST'] = raw_data.get('Last')
+            parsed_name['NAME_LAST'] = raw_data.get('Last')
 
             # columnName: Suffix
             # 1.0 populated, 1.57 unique
@@ -143,9 +141,10 @@ class mapper():
             #      III (345)
             #      II (165)
             #      SR. (152)
-            parsed_name['PRIMARY_NAME_SUFFIX'] = raw_data.get('Suffix')
+            parsed_name['NAME_SUFFIX'] = raw_data.get('Suffix')
+            parsed_name['NAME_TYPE'] = 'PRIMARY'
 
-            self.record_cache[record_id]['NAME_LIST'].append(parsed_name)
+            self.record_cache[record_id]['FEATURES'].append(parsed_name)
 
 
         # columnName: Scriptname
@@ -156,7 +155,7 @@ class mapper():
         #      صرافی روشان (20)
         #      حاجى مالك نورزى (18)
         if raw_data.get('Scriptname'):
-            self.record_cache[record_id]['NAME_LIST'].append({'NATIVE_NAME_FULL': raw_data.get('Scriptname')})
+            self.record_cache[record_id]['FEATURES'].append({'NAME_FULL': raw_data.get('Scriptname')})
 
         # columnName: Title
         # 19.68 populated, 4.79 unique
@@ -197,7 +196,7 @@ class mapper():
         #      male (2171)
         #      F (1245)
         if raw_data.get('Sex'):
-            self.record_cache[record_id]['ATTRIBUTE_LIST'].append({'GENDER': 'M' if raw_data.get('Sex', '') == 'Masculin' else raw_data.get('Sex')})
+            self.record_cache[record_id]['FEATURES'].append({'GENDER': 'M' if raw_data.get('Sex', '') == 'Masculin' else raw_data.get('Sex')})
 
         # columnName: Languages
         # 5.06 populated, 0.29 unique
@@ -220,7 +219,7 @@ class mapper():
         if raw_data.get('TIN'):
             for tin_str in raw_data.get('TIN').split():
                 if not (tin_str.startswith('(') and tin_str.endswith(')') and len(tin_str) < 5):
-                    self.record_cache[record_id]['IDENTIFIER_LIST'].append({'NATIONAL_ID_NUMBER': tin_str})
+                    self.record_cache[record_id]['FEATURES'].append({'NATIONAL_ID_NUMBER': tin_str})
 
         # columnName: documents
         # 1.62 populated, 43.84 unique
@@ -242,7 +241,7 @@ class mapper():
         #      (1) Uganda (2) Uganda (3)Uganda (400)
         if raw_data.get('POB'):
             pob_attr = 'PLACE_OF_BIRTH' if record_type == 'PERSON' else 'REGISTRATION_COUNTRY'
-            self.record_cache[record_id]['ATTRIBUTE_LIST'].append({pob_attr: raw_data.get('POB')})
+            self.record_cache[record_id]['FEATURES'].append({pob_attr: raw_data.get('POB')})
 
         # columnName: DOB
         # 7.84 populated, 32.95 unique
@@ -254,7 +253,7 @@ class mapper():
         if raw_data.get('DOB'):
             dob_attr = 'DATE_OF_BIRTH' if record_type == 'PERSON' else 'REGISTRATION_DATE'
             dob_value = raw_data.get('DOB').replace("00/","")
-            self.record_cache[record_id]['ATTRIBUTE_LIST'].append({dob_attr: dob_value})
+            self.record_cache[record_id]['FEATURES'].append({dob_attr: dob_value})
 
         # columnName: citizenship
         # 5.01 populated, 2.1 unique
@@ -264,7 +263,7 @@ class mapper():
         #      Belarus (755)
         #      Iraq (665)
         if raw_data.get('citizenship'):
-            self.record_cache[record_id]['ATTRIBUTE_LIST'].append({'CITIZENSHIP': raw_data.get('citizenship')})
+            self.record_cache[record_id]['FEATURES'].append({'CITIZENSHIP': raw_data.get('citizenship')})
 
         # columnName: phone
         # 0.3 populated, 92.62 unique
@@ -275,11 +274,11 @@ class mapper():
         #      +44 0208 895 6910 (3)
         if raw_data.get('phone'):
             for phone_str in raw_data.get('phone').split(","):
-                self.record_cache[record_id]['CONTACT_LIST'].append({'PHONE_NUMBER': phone_str.strip()})
+                self.record_cache[record_id]['FEATURES'].append({'PHONE_NUMBER': phone_str.strip()})
 
         if raw_data.get('fax'):
             for phone_str in raw_data.get('fax').split(","):
-                self.record_cache[record_id]['CONTACT_LIST'].append({'DAX_PHONE_NUMBER': phone_str.strip()})
+                self.record_cache[record_id]['FEATURES'].append({'PHONE_NUMBER': phone_str.strip()})
 
         # columnName: email
         # 0.66 populated, 26.83 unique
@@ -291,7 +290,7 @@ class mapper():
         if raw_data.get('email'):
             for email_str in raw_data.get('email').split():
                 if '@' in email_str:
-                    self.record_cache[record_id]['CONTACT_LIST'].append({'EMAIL_ADDRESS': email_str})
+                    self.record_cache[record_id]['FEATURES'].append({'EMAIL_ADDRESS': email_str})
 
         # columnName: website
         # 0.8 populated, 86.8 unique
@@ -301,7 +300,7 @@ class mapper():
         #      http://www.aquaintproperty.com/ (3)
         #      http://iconsolutions.eu/about/,http://www.itraonline.com/,http://www.realtyaccess.global/portfolio/ (3)
         if raw_data.get('website'):
-            self.record_cache[record_id]['CONTACT_LIST'].append({'WEBSITE_ADDRESS': raw_data.get('website')})
+            self.record_cache[record_id]['FEATURES'].append({'WEBSITE_ADDRESS': raw_data.get('website')})
 
         # columnName: constituancy
         # 0.05 populated, 25.55 unique
@@ -425,7 +424,7 @@ class mapper():
         #      T2EH4 (4)
         #      T2ER4 (4)
         if raw_data.get('Call_sign'):
-            self.record_cache[record_id]['CONTACT_LIST'].append({'CALL_SIGN': raw_data.get('Call_sign')})
+            self.record_cache[record_id]['FEATURES'].append({'CALL_SIGN': raw_data.get('Call_sign')})
 
         # columnName: Vess_type
         # 18.08 populated, 0.09 unique
@@ -468,7 +467,7 @@ class mapper():
         #      Russia (152)
         #      North Korea (81)
         if raw_data.get('Vess_Flag'):
-            self.record_cache[record_id]['OTHER_LIST'].append({'Vess_Flag': raw_data.get('Vess_Flag')})
+            self.add_to_other_list(other_list, raw_data, 'Vess_Flag')
 
         # columnName: Vess_owner
         # 18.08 populated, 0.03 unique
@@ -545,7 +544,7 @@ class mapper():
             if raw_data.get('Country'):
                 address_data['ADDR_COUNTRY'] = raw_data.get('Country')
 
-            self.record_cache[record_id]['ADDRESS_LIST'].append(address_data)
+            self.record_cache[record_id]['FEATURES'].append(address_data)
 
         # columnName: Address_remarks
         # 20.26 populated, 0.27 unique
@@ -577,14 +576,15 @@ class mapper():
         #      BANK VTB OPEN JOINT STOCK COMPANY (72)
         #      BANK VNESHNEY TORGOVLI ROSSIYSKOY FEDERATSII CLOSED JOINT STOCK COMPANY (72)
         if raw_data.get('Alias_name'):
-            senzing_attr = 'ALIAS_NAME_FULL'
+            #senzing_attr = 'ALIAS_NAME_FULL'
             # abandoned as too many variations to be fruitful
             #   sometimes its a person name associated with the organization!
             #if record_type == 'PERSON':  
             #    alias_name = raw_data.get('Alias_name').replace(',', ' ').replace('.', ' ') + ' '
             #    if any(x in alias_name for x in (' COMPANY ', ' LLC ', ' INC ')):
             #        senzing_attr = 'GROUP_ASSOCIATION_ORG_NAME'
-            self.record_cache[record_id]['NAME_LIST'].append({senzing_attr: raw_data.get('Alias_name')})
+            #self.record_cache[record_id]['NAME_LIST'].append({senzing_attr: raw_data.get('Alias_name')})
+            self.add_to_other_list(other_list, raw_data, 'Alias_name')
 
         # columnName: riskcode
         # 100.0 populated, 0.0 unique
