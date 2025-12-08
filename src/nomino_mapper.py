@@ -8,14 +8,16 @@ import json
 import time
 import hashlib
 
-#=========================
-class mapper():
 
-    #----------------------------------------
+# =========================
+class mapper:
+
+    # ----------------------------------------
     def __init__(self):
 
         self.load_reference_data()
         self.record_cache = {}
+<<<<<<<< HEAD:src/nomino_mapper.py
 
     #----------------------------------------
     def add_to_payload(self, payload, raw_data, key):
@@ -26,29 +28,90 @@ class mapper():
 
     #----------------------------------------
     def map(self, raw_data):
+========
+        self.person_types = (
+            "INDIVIDUAL",
+            "PERSON",
+            "P",
+            "PERSONNE PHYSIQUE",
+            "PERSONNE MORALE",
+            "BANNED TERRORIST INDIVIDUAL",
+        )
 
-        #--clean values
+    # ----------------------------------------
+    def map(self, raw_data, input_row_num=None):
+>>>>>>>> origin/main:src/nomino-mapper.py
+
+        # --clean values
         for attribute in raw_data:
             raw_data[attribute] = self.clean_value(raw_data[attribute])
 
+<<<<<<<< HEAD:src/nomino_mapper.py
         record_id = self.compute_record_hash(raw_data, ['Source', 'OriginalID', 'namefull', 'Title','page_URL'])
         payload = {}
+========
+        # --place any filters needed here
 
-        raw_type = raw_data.get('type', '').upper()
+        # --place any calculations needed here
 
+        record_id = self.compute_record_hash(
+            raw_data, ["Source", "OriginalID", "namefull", "Title", "page_URL"]
+        )
+>>>>>>>> origin/main:src/nomino-mapper.py
+
+        raw_type = raw_data.get("type", "").upper()
+
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_type == 'AIRCRAFT':
             record_type = 'AIRCRAFT'
         elif raw_type in ('VESSEL', 'SHIP') or raw_data.get('Vess_type'):
             record_type = 'VESSEL'
         elif raw_data.get('Person', '0') == '1' or raw_data.get('First'):
             record_type = 'PERSON'
+========
+        if raw_type == "AIRCRAFT":
+            record_type = "AIRCRAFT"
+        elif raw_type in ("VESSEL", "SHIP") or raw_data.get("Vess_type"):
+            record_type = "VESSEL"
+        elif (
+            raw_type in self.person_types
+            or raw_data.get("Person", "0") == "1"
+            or raw_data.get("First")
+        ):
+            record_type = "PERSON"
+            # if not (raw_type in self.person_types or raw_data.get('Person', '0') == '1'):
+            #    input(json.dumps(raw_data, indent=4))
+>>>>>>>> origin/main:src/nomino-mapper.py
         else:
-            record_type = 'ORGANIZATION'
+            record_type = "ORGANIZATION"
 
         if record_id not in self.record_cache:
+<<<<<<<< HEAD:src/nomino_mapper.py
             self.record_cache[record_id] = {'DATA_SOURCE': args.data_source.upper(),
                                             'RECORD_ID': record_id,
                                             'FEATURES': [{'RECORD_TYPE': record_type}]}
+========
+            self.record_cache[record_id] = {
+                "DATA_SOURCE": args.data_source.upper(),
+                "RECORD_ID": record_id,
+                "RECORD_TYPE": record_type,
+                "NAME_LIST": [],
+                "ADDRESS_LIST": [],
+                "CONTACT_LIST": [],
+                "IDENTIFIER_LIST": [],
+                "ATTRIBUTE_LIST": [],
+                "OTHER_LIST": [],
+            }
+
+        # columnName: riskfeedID
+        # 100.0 populated, 100.0 unique
+        #      7156229 (1)
+        #      7156230 (1)
+        #      7156231 (1)
+        #      7156232 (1)
+        #      7156233 (1)
+        # json_data['riskfeedID'] = raw_data.get('riskfeedID']
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: OriginalID
         # 95.92 populated, 62.39 unique
@@ -57,9 +120,16 @@ class mapper():
         #      10486 (608)
         #      20820 (511)
         #      CAF0010 (400)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('OriginalID'):
             self.add_to_payload(payload, raw_data, 'OriginalID')
 
+========
+        if raw_data.get("OriginalID"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"OriginalID": raw_data.get("OriginalID")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: namefull
         # 100.0 populated, 64.12 unique
@@ -68,10 +138,21 @@ class mapper():
         #      TAMILS REHABILITATION ORGANISATION (609)
         #      AL-OMGY AND BROTHERS MONEY EXCHANGE (512)
         #      AERO CONTINENTE S.A (330)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('namefull') and not raw_data.get('First'):
             name_attribute = 'NAME_FULL' if record_type == 'PERSON' else 'NAME_ORG'
             self.record_cache[record_id]['FEATURES'].append({name_attribute: raw_data.get('namefull'), 'NAME_TYPE': 'PRIMARY'})
         elif raw_data.get('First') or raw_data.get('Middle') or raw_data.get('Last'):
+========
+        if raw_data.get("namefull") and not raw_data.get("First"):
+            name_attribute = (
+                "PRIMARY_NAME_FULL" if record_type == "PERSON" else "PRIMARY_NAME_ORG"
+            )
+            self.record_cache[record_id]["NAME_LIST"].append(
+                {name_attribute: raw_data.get("namefull")}
+            )
+        elif raw_data.get("First") or raw_data.get("Middle") or raw_data.get("Last"):
+>>>>>>>> origin/main:src/nomino-mapper.py
             parsed_name = {}
             # columnName: courtesytitle
             # 0.06 populated, 5.26 unique
@@ -80,7 +161,11 @@ class mapper():
             #      Ms (15)
             #      MS (2)
             #      DR (2)
+<<<<<<<< HEAD:src/nomino_mapper.py
             parsed_name['NAME_PREFIX'] = raw_data.get('courtesytitle')
+========
+            parsed_name["PRIMARY_NAME_PREFIX"] = raw_data.get("courtesytitle")
+>>>>>>>> origin/main:src/nomino-mapper.py
 
             # columnName: First
             # 56.55 populated, 17.49 unique
@@ -89,7 +174,11 @@ class mapper():
             #      JAMES (1615)
             #      ROBERT (1611)
             #      DAVID (1414)
+<<<<<<<< HEAD:src/nomino_mapper.py
             parsed_name['NAME_FIRST'] = raw_data.get('First')
+========
+            parsed_name["PRIMARY_NAME_FIRST"] = raw_data.get("First")
+>>>>>>>> origin/main:src/nomino-mapper.py
 
             # columnName: Middle
             # 34.55 populated, 12.85 unique
@@ -98,7 +187,11 @@ class mapper():
             #      ANN (2178)
             #      M. (2121)
             #      J. (1849)
+<<<<<<<< HEAD:src/nomino_mapper.py
             parsed_name['NAME_MIDDLE'] = raw_data.get('Middle')
+========
+            parsed_name["PRIMARY_NAME_MIDDLE"] = raw_data.get("Middle")
+>>>>>>>> origin/main:src/nomino-mapper.py
 
             # columnName: Last
             # 58.99 populated, 33.09 unique
@@ -107,7 +200,11 @@ class mapper():
             #      WILLIAMS (688)
             #      JONES (662)
             #      BROWN (649)
+<<<<<<<< HEAD:src/nomino_mapper.py
             parsed_name['NAME_LAST'] = raw_data.get('Last')
+========
+            parsed_name["PRIMARY_NAME_LAST"] = raw_data.get("Last")
+>>>>>>>> origin/main:src/nomino-mapper.py
 
             # columnName: Suffix
             # 1.0 populated, 1.57 unique
@@ -116,11 +213,16 @@ class mapper():
             #      III (345)
             #      II (165)
             #      SR. (152)
+<<<<<<<< HEAD:src/nomino_mapper.py
             parsed_name['NAME_SUFFIX'] = raw_data.get('Suffix')
             parsed_name['NAME_TYPE'] = 'PRIMARY'
 
             self.record_cache[record_id]['FEATURES'].append(parsed_name)
+========
+            parsed_name["PRIMARY_NAME_SUFFIX"] = raw_data.get("Suffix")
+>>>>>>>> origin/main:src/nomino-mapper.py
 
+            self.record_cache[record_id]["NAME_LIST"].append(parsed_name)
 
         # columnName: Scriptname
         # 1.6 populated, 74.1 unique
@@ -129,8 +231,15 @@ class mapper():
         #      عبد الرحمن ولد العامر (25)
         #      صرافی روشان (20)
         #      حاجى مالك نورزى (18)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Scriptname'):
             self.record_cache[record_id]['FEATURES'].append({'NAME_FULL': raw_data.get('Scriptname')})
+========
+        if raw_data.get("Scriptname"):
+            self.record_cache[record_id]["NAME_LIST"].append(
+                {"NATIVE_NAME_FULL": raw_data.get("Scriptname")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Title
         # 19.68 populated, 4.79 unique
@@ -139,6 +248,7 @@ class mapper():
         #      Scientific Studies and Research Center Employee (271)
         #      Haji (249)
         #      Maulavi (202)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Title'):
             self.add_to_payload(payload, raw_data, 'Title')
 
@@ -156,6 +266,17 @@ class mapper():
 
         if raw_data.get('weight'):
             self.add_to_payload(payload, raw_data, 'weight')
+========
+        if raw_data.get("Title"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Title": raw_data.get("Title")}
+            )
+
+        # columnName: marks
+        # 14.75 populated, 0.0 unique
+        #      -0- (39705)
+        # json_data['marks'] = raw_data.get('marks']
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Sex
         # 7.85 populated, 0.04 unique
@@ -164,8 +285,21 @@ class mapper():
         #      Masculin (2403)
         #      male (2171)
         #      F (1245)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Sex'):
             self.record_cache[record_id]['FEATURES'].append({'GENDER': 'M' if raw_data.get('Sex', '') == 'Masculin' else raw_data.get('Sex')})
+========
+        if raw_data.get("Sex"):
+            self.record_cache[record_id]["ATTRIBUTE_LIST"].append(
+                {
+                    "GENDER": (
+                        "M"
+                        if raw_data.get("Sex", "") == "Masculin"
+                        else raw_data.get("Sex")
+                    )
+                }
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Languages
         # 5.06 populated, 0.29 unique
@@ -174,8 +308,15 @@ class mapper():
         #      RU (1674)
         #      SK (518)
         #      CS (497)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Languages'):
             self.add_to_payload(payload, raw_data, 'Languages')
+========
+        if raw_data.get("Languages"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Languages": raw_data.get("Languages")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: TIN
         # 0.71 populated, 13.74 unique
@@ -184,10 +325,17 @@ class mapper():
         #      20227088368 (60)
         #      11010046398 (57)
         #      103-00653129-22 (56)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('TIN'):
             for tin_str in raw_data.get('TIN').split():
                 if not (tin_str.startswith('(') and tin_str.endswith(')') and len(tin_str) < 5):
                     self.record_cache[record_id]['FEATURES'].append({'NATIONAL_ID_NUMBER': tin_str})
+========
+        if raw_data.get("TIN"):
+            self.record_cache[record_id]["IDENTIFIER_LIST"].append(
+                {"NATIONAL_ID_NUMBER": raw_data.get("TIN")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: documents
         # 1.62 populated, 43.84 unique
@@ -196,8 +344,15 @@ class mapper():
         #      (1) D00001184 (2) P04838205 (60)
         #      (1) D00000897 (2) D00004262 (56)
         #      00814L001424 (55)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('documents'):
             self.add_to_payload(payload, raw_data, 'documents')
+========
+        if raw_data.get("documents"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"documents": raw_data.get("documents")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: POB
         # 6.41 populated, 7.2 unique
@@ -206,9 +361,19 @@ class mapper():
         #      Afghanistan (580)
         #      Iran (401)
         #      (1) Uganda (2) Uganda (3)Uganda (400)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('POB'):
             pob_attr = 'PLACE_OF_BIRTH' if record_type == 'PERSON' else 'REGISTRATION_COUNTRY'
             self.record_cache[record_id]['FEATURES'].append({pob_attr: raw_data.get('POB')})
+========
+        if raw_data.get("POB"):
+            pob_attr = (
+                "PLACE_OF_BIRTH" if record_type == "PERSON" else "REGISTRATION_COUNTRY"
+            )
+            self.record_cache[record_id]["ATTRIBUTE_LIST"].append(
+                {pob_attr: raw_data.get("POB")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: DOB
         # 7.84 populated, 32.95 unique
@@ -217,10 +382,20 @@ class mapper():
         #      00/00/1977 (125)
         #      00/00/1963 (123)
         #      00/00/1959 (116)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('DOB'):
             dob_attr = 'DATE_OF_BIRTH' if record_type == 'PERSON' else 'REGISTRATION_DATE'
             dob_value = raw_data.get('DOB').replace("00/","")
             self.record_cache[record_id]['FEATURES'].append({dob_attr: dob_value})
+========
+        if raw_data.get("DOB"):
+            dob_attr = (
+                "DATE_OF_BIRTH" if record_type == "PERSON" else "REGISTRATION_DATE"
+            )
+            self.record_cache[record_id]["ATTRIBUTE_LIST"].append(
+                {dob_attr: raw_data.get("DOB")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: citizenship
         # 5.01 populated, 2.1 unique
@@ -229,8 +404,15 @@ class mapper():
         #      Afghanistan (1121)
         #      Belarus (755)
         #      Iraq (665)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('citizenship'):
             self.record_cache[record_id]['FEATURES'].append({'CITIZENSHIP': raw_data.get('citizenship')})
+========
+        if raw_data.get("citizenship"):
+            self.record_cache[record_id]["ATTRIBUTE_LIST"].append(
+                {"CITIZENSHIP": raw_data.get("citizenship")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: phone
         # 0.3 populated, 92.62 unique
@@ -239,6 +421,7 @@ class mapper():
         #      Singapore:+65 63922713,Fax: +65 63922716,Malaysia:+60 72211871 (7)
         #      +8 (800) 555-55-50 (4)
         #      +44 0208 895 6910 (3)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('phone'):
             for phone_str in raw_data.get('phone').split(","):
                 self.record_cache[record_id]['FEATURES'].append({'PHONE_NUMBER': phone_str.strip()})
@@ -246,6 +429,12 @@ class mapper():
         if raw_data.get('fax'):
             for phone_str in raw_data.get('fax').split(","):
                 self.record_cache[record_id]['FEATURES'].append({'PHONE_NUMBER': phone_str.strip()})
+========
+        if raw_data.get("phone"):
+            self.record_cache[record_id]["CONTACT_LIST"].append(
+                {"PHONE_NUMBER": raw_data.get("phone")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: email
         # 0.66 populated, 26.83 unique
@@ -254,10 +443,17 @@ class mapper():
         #      info@hesaco.com (72)
         #      info@ieimil.ir (63)
         #      info@irmig.ir (45)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('email'):
             for email_str in raw_data.get('email').split():
                 if '@' in email_str:
                     self.record_cache[record_id]['FEATURES'].append({'EMAIL_ADDRESS': email_str})
+========
+        if raw_data.get("email"):
+            self.record_cache[record_id]["CONTACT_LIST"].append(
+                {"EMAIL_ADDRESS": raw_data.get("email")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: website
         # 0.8 populated, 86.8 unique
@@ -266,8 +462,15 @@ class mapper():
         #      http://www.stglimitedasia.com (3)
         #      http://www.aquaintproperty.com/ (3)
         #      http://iconsolutions.eu/about/,http://www.itraonline.com/,http://www.realtyaccess.global/portfolio/ (3)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('website'):
             self.record_cache[record_id]['FEATURES'].append({'WEBSITE_ADDRESS': raw_data.get('website')})
+========
+        if raw_data.get("website"):
+            self.record_cache[record_id]["CONTACT_LIST"].append(
+                {"WEBSITE_ADDRESS": raw_data.get("website")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: constituancy
         # 0.05 populated, 25.55 unique
@@ -276,11 +479,18 @@ class mapper():
         #      702 - General Services (8)
         #      561 - General Services (7)
         #      854 - General Services (7)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('constituancy'):
             self.add_to_payload(payload, raw_data, 'constituancy')
 
         if raw_data.get('political_party'):
             self.add_to_payload(payload, raw_data, 'political_party')
+========
+        if raw_data.get("constituancy"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"constituancy": raw_data.get("constituancy")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Image_URL
         # 0.49 populated, 43.42 unique
@@ -289,8 +499,15 @@ class mapper():
         #      https://www.mha.gov.in/sites/default/files/2023-06/listof54terrorists_22062023.pdf (54)
         #      https://www.mha.gov.in/sites/default/files/2023-03/TERRORIST_ORGANIZATIONS_10032023.pdf (44)
         #      https://www.mha.gov.in/sites/default/files/2023-01/NAMESOFUNLAWFULASSOCIATIONS_20012023.pdf (21)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Image_URL'):
             self.add_to_payload(payload, raw_data, 'Image_URL')
+========
+        if raw_data.get("Image_URL"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Image_URL": raw_data.get("Image_URL")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: page_URL
         # 99.85 populated, 0.13 unique
@@ -299,8 +516,15 @@ class mapper():
         #      http://ec.europa.eu/external_relations/cfsp/sanctions/list/version4/global/global.xml (22052)
         #      http://www.hm-treasury.gov.uk/fin_sanctions_index.htm (17686)
         #      https://www.dfat.gov.au/international-relations/security/sanctions/Pages/consolidated-list (8295)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('page_URL'):
             self.add_to_payload(payload, raw_data, 'page_URL')
+========
+        if raw_data.get("page_URL"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"page_URL": raw_data.get("page_URL")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Source
         # 99.85 populated, 0.01 unique
@@ -309,8 +533,15 @@ class mapper():
         #      Consolidated list of persons, groups and entities subject to EU financial sanctions (22052)
         #      HM-Treasury Consolidated list of financial sanctions targets (17686)
         #      DFAT - Consolidated list (8295)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Source'):
             self.add_to_payload(payload, raw_data, 'Source')
+========
+        if raw_data.get("Source"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Source": raw_data.get("Source")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: type
         # 99.54 populated, 0.02 unique
@@ -319,8 +550,15 @@ class mapper():
         #      individual (16196)
         #      Special Entity Designation (13941)
         #      P (13531)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('type'):
             self.add_to_payload(payload, raw_data, 'type')
+========
+        if raw_data.get("type"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"type": raw_data.get("type")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: offense
         # 40.17 populated, 0.59 unique
@@ -329,8 +567,15 @@ class mapper():
         #      Z2 (10908)
         #      Z (4397)
         #      03-SDN-01 (4364)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('offense'):
             self.add_to_payload(payload, raw_data, 'offense')
+========
+        if raw_data.get("offense"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"offense": raw_data.get("offense")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: wantedby
         # 55.3 populated, 0.1 unique
@@ -339,8 +584,15 @@ class mapper():
         #      TREAS-OFAC (25197)
         #      DOJ (2580)
         #      EPA (2198)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('wantedby'):
             self.add_to_payload(payload, raw_data, 'wantedby')
+========
+        if raw_data.get("wantedby"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"wantedby": raw_data.get("wantedby")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Program
         # 88.48 populated, 0.35 unique
@@ -349,8 +601,15 @@ class mapper():
         #      SDGT (14105)
         #      UKR (8496)
         #      RUSSIA-EO14024 (5670)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Program'):
             self.add_to_payload(payload, raw_data, 'Program')
+========
+        if raw_data.get("Program"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Program": raw_data.get("Program")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Legalbasis
         # 69.94 populated, 0.55 unique
@@ -359,8 +618,15 @@ class mapper():
         #      UKR (8496)
         #      TAQA (2655)
         #      1 (2503)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Legalbasis'):
             self.add_to_payload(payload, raw_data, 'Legalbasis')
+========
+        if raw_data.get("Legalbasis"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Legalbasis": raw_data.get("Legalbasis")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Listingdate
         # 17.99 populated, 3.58 unique
@@ -369,8 +635,15 @@ class mapper():
         #      2023/09/14 00:00:00.000 (1235)
         #      2023/03/14 00:00:00.000 (938)
         #      2023/07/21 00:00:00.000 (753)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Listingdate'):
             self.add_to_payload(payload, raw_data, 'Listingdate')
+========
+        if raw_data.get("Listingdate"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Listingdate": raw_data.get("Listingdate")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Call_sign
         # 18.05 populated, 0.38 unique
@@ -379,8 +652,15 @@ class mapper():
         #      T2DQ4 (4)
         #      T2EH4 (4)
         #      T2ER4 (4)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Call_sign'):
             self.record_cache[record_id]['FEATURES'].append({'CALL_SIGN': raw_data.get('Call_sign')})
+========
+        if raw_data.get("Call_sign"):
+            self.record_cache[record_id]["CONTACT_LIST"].append(
+                {"CALL_SIGN": raw_data.get("Call_sign")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Vess_type
         # 18.08 populated, 0.09 unique
@@ -389,8 +669,15 @@ class mapper():
         #      Fishing Vessel (149)
         #      Crude Oil Tanker (129)
         #      Oil tanker (56)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Vess_type'):
             self.add_to_payload(payload, raw_data, 'Vess_type')
+========
+        if raw_data.get("Vess_type"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Vess_type": raw_data.get("Vess_type")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Tonnage
         # 18.05 populated, 0.09 unique
@@ -399,8 +686,15 @@ class mapper():
         #      317,356 (9)
         #      159,681 (7)
         #      99,144 (6)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Tonnage'):
             self.add_to_payload(payload, raw_data, 'Tonnage')
+========
+        if raw_data.get("Tonnage"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Tonnage": raw_data.get("Tonnage")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: GRT
         # 18.08 populated, 0.19 unique
@@ -409,8 +703,15 @@ class mapper():
         #      163,660 (14)
         #      160,930 (14)
         #      165,000 (10)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('GRT'):
             self.add_to_payload(payload, raw_data, 'GRT')
+========
+        if raw_data.get("GRT"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"GRT": raw_data.get("GRT")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Vess_Flag
         # 18.08 populated, 0.08 unique
@@ -419,8 +720,15 @@ class mapper():
         #      China (159)
         #      Russia (152)
         #      North Korea (81)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Vess_Flag'):
             self.add_to_payload(payload, raw_data, 'Vess_Flag')
+========
+        if raw_data.get("Vess_Flag"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Vess_Flag": raw_data.get("Vess_Flag")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Vess_owner
         # 18.08 populated, 0.03 unique
@@ -429,8 +737,15 @@ class mapper():
         #      Phyongchon Shipping & Marine (11)
         #      Hapjanggang Shipping Corp (10)
         #      Chonmyong Shipping Co (9)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Vess_owner'):
             self.add_to_payload(payload, raw_data, 'Vess_owner')
+========
+        if raw_data.get("Vess_owner"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Vess_owner": raw_data.get("Vess_owner")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: remarks
         # 44.08 populated, 40.43 unique
@@ -439,10 +754,23 @@ class mapper():
         #      SWIFT/BIC VTBRRUMM; Website www.vtb.com; alt. Website www.vtb.ru; BIK (RU) 044030707; alt. BIK (RU) 044525187; Executive Order 13662 Directive Determination - Subject to Directive 1; Secondary sanctions risk: Ukraine-/Russia-Related Sanctions Regulations, 31 CFR 589.201 and/or 589.209; Organization Established Date 17 Oct 1990; Target Type Financial Institution; Registration ID 1027739609391 (Russia); Tax ID No. 7702070139 (Russia); Government Gazette Number 00032520 (Russia); License 1000 (Russia); Legal Entity Number 253400V1H6ART1UQ0N98 (Russia); For more information on directives, please visit the following link: http://www.treasury.gov/resource-center/sanctions/Programs/Pages/ukraine.aspx#directives. (1872)
         #      ; (1625)
         #      12/31/2999 (852)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('remarks'):
             self.add_to_payload(payload, raw_data, 'remarks')
+========
+        if raw_data.get("remarks"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"remarks": raw_data.get("remarks")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
-        if raw_data.get('Address') or raw_data.get('City') or raw_data.get('province') or raw_data.get('postcode') or raw_data.get('Country'):
+        if (
+            raw_data.get("Address")
+            or raw_data.get("City")
+            or raw_data.get("province")
+            or raw_data.get("postcode")
+            or raw_data.get("Country")
+        ):
             address_data = {}
 
             # columnName: Address
@@ -452,8 +780,8 @@ class mapper():
             #      RIHS Office (285)
             #      Bashnya Zapad, Kompleks Federatsiya, 12, nab. Presnenskaya (208)
             #      29, Bolshaya Morskaya str. (208)
-            if raw_data.get('Address'):
-                address_data['ADDR_LINE1'] = raw_data.get('Address')
+            if raw_data.get("Address"):
+                address_data["ADDR_LINE1"] = raw_data.get("Address")
 
             # columnName: City
             # 68.17 populated, 9.79 unique
@@ -462,8 +790,8 @@ class mapper():
             #      Tehran (1486)
             #      HOUSTON (1188)
             #      MOSCOW (1171)
-            if raw_data.get('City'):
-                address_data['ADDR_CITY'] = raw_data.get('City')
+            if raw_data.get("City"):
+                address_data["ADDR_CITY"] = raw_data.get("City")
 
             # columnName: province
             # 48.98 populated, 0.86 unique
@@ -472,8 +800,8 @@ class mapper():
             #      TX (10154)
             #      NY (7425)
             #      PA (4805)
-            if raw_data.get('province'):
-                address_data['ADDR_STATE'] = raw_data.get('province')
+            if raw_data.get("province"):
+                address_data["ADDR_STATE"] = raw_data.get("province")
 
             # columnName: postcode
             # 0.75 populated, 17.82 unique
@@ -482,8 +810,8 @@ class mapper():
             #      283001 (113)
             #      119019 (56)
             #      34940 (31)
-            if raw_data.get('postcode'):
-                address_data['ADDR_POSTAL_CODE'] = raw_data.get('postcode')
+            if raw_data.get("postcode"):
+                address_data["ADDR_POSTAL_CODE"] = raw_data.get("postcode")
 
             # columnName: Country
             # 83.17 populated, 0.24 unique
@@ -492,10 +820,14 @@ class mapper():
             #      XUN (9150)
             #      Iran (5301)
             #      -0- (4662)
-            if raw_data.get('Country'):
-                address_data['ADDR_COUNTRY'] = raw_data.get('Country')
+            if raw_data.get("Country"):
+                address_data["ADDR_COUNTRY"] = raw_data.get("Country")
 
+<<<<<<<< HEAD:src/nomino_mapper.py
             self.record_cache[record_id]['FEATURES'].append(address_data)
+========
+            self.record_cache[record_id]["ADDRESS_LIST"].append(address_data)
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Address_remarks
         # 20.26 populated, 0.27 unique
@@ -504,8 +836,15 @@ class mapper():
         #      SGP (1044)
         #      NGA (535)
         #      Los Angeles County (399)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Address_remarks'):
             self.add_to_payload(payload, raw_data, 'Address_remarks')
+========
+        if raw_data.get("Address_remarks"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Address_remarks": raw_data.get("Address_remarks")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Alias_type
         # 25.1 populated, 0.08 unique
@@ -514,8 +853,15 @@ class mapper():
         #      Primary name (5374)
         #      Primary name variation (4729)
         #      fka (2792)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Alias_type'):
             self.add_to_payload(payload, raw_data, 'Alias_type')
+========
+        if raw_data.get("Alias_type"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Alias_type": raw_data.get("Alias_type")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Alias_name
         # 17.31 populated, 48.8 unique
@@ -524,21 +870,42 @@ class mapper():
         #      JSC VTB BANK (72)
         #      BANK VTB OPEN JOINT STOCK COMPANY (72)
         #      BANK VNESHNEY TORGOVLI ROSSIYSKOY FEDERATSII CLOSED JOINT STOCK COMPANY (72)
+<<<<<<<< HEAD:src/nomino_mapper.py
         # Alias_name not mapped to NAME feature - too many variations to be useful for matching
         if raw_data.get('Alias_name'):
             self.add_to_payload(payload, raw_data, 'Alias_name')
+========
+        if raw_data.get("Alias_name"):
+            self.record_cache[record_id]["NAME_LIST"].append(
+                {"ALIAS_NAME_FULL": raw_data.get("Alias_name")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: riskcode
         # 100.0 populated, 0.0 unique
         #      WL (269183)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('riskcode'):
             self.add_to_payload(payload, raw_data, 'riskcode')
+========
+        if raw_data.get("riskcode"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"riskcode": raw_data.get("riskcode")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: active
         # 100.0 populated, 0.0 unique
         #      1 (269183)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('active'):
             self.add_to_payload(payload, raw_data, 'active')
+========
+        if raw_data.get("active"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"active": raw_data.get("active")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: timestamp
         # 100.0 populated, 0.09 unique
@@ -547,72 +914,221 @@ class mapper():
         #      2024/02/05 23:00:31.000000000 (5049)
         #      2024/02/05 23:00:35.000000000 (5032)
         #      2024/02/05 23:00:30.000000000 (4998)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('timestamp'):
             self.add_to_payload(payload, raw_data, 'timestamp')
+========
+        if raw_data.get("timestamp"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"timestamp": raw_data.get("timestamp")}
+            )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
         # columnName: Person
         # 3.05 populated, 0.02 unique
         #      0 (5676)
         #      1 (2532)
+<<<<<<<< HEAD:src/nomino_mapper.py
         if raw_data.get('Person'):
             self.add_to_payload(payload, raw_data, 'Person')
 
         for key, values in payload.items():
             self.record_cache[record_id][key] = ' | '.join(values)
+========
+        if raw_data.get("Person"):
+            self.record_cache[record_id]["OTHER_LIST"].append(
+                {"Person": raw_data.get("Person")}
+            )
 
-    #----------------------------------------
+        # --remove empty attributes and capture the stats
+        # json_data = self.remove_empty_tags(json_data)
+        # self.capture_mapped_stats(json_data)
+        # return json_data
+>>>>>>>> origin/main:src/nomino-mapper.py
+
+    # ----------------------------------------
     def load_reference_data(self):
 
+<<<<<<<< HEAD:src/nomino_mapper.py
         #--garbage values
+========
+        # --garbage values
+>>>>>>>> origin/main:src/nomino-mapper.py
         self.variant_data = {}
-        self.variant_data['GARBAGE_VALUES'] = ['NULL', 'NUL', 'N/A', '-0-']
+        self.variant_data["GARBAGE_VALUES"] = ["NULL", "NUL", "N/A", "-0-"]
 
-    #-----------------------------------
+    # -----------------------------------
     def clean_value(self, raw_value):
         if not raw_value:
+<<<<<<<< HEAD:src/nomino_mapper.py
             return ''
         new_value = ' '.join(str(raw_value).strip().split())
         if new_value.upper() in self.variant_data['GARBAGE_VALUES']:
             return ''
+========
+            return ""
+        new_value = " ".join(str(raw_value).strip().split())
+        if new_value.upper() in self.variant_data["GARBAGE_VALUES"]:
+            return ""
+>>>>>>>> origin/main:src/nomino-mapper.py
         return new_value
 
-    #-----------------------------------
-    def compute_record_hash(self, target_dict, attr_list = None):
+    # -----------------------------------
+    def compute_record_hash(self, target_dict, attr_list=None):
         if attr_list:
-            string_to_hash = ''
+            string_to_hash = ""
             for attr_name in sorted(attr_list):
+<<<<<<<< HEAD:src/nomino_mapper.py
                 string_to_hash += (' '.join(str(target_dict[attr_name]).split()).upper() if attr_name in target_dict and target_dict[attr_name] else '') + '|'
+========
+                string_to_hash += (
+                    " ".join(str(target_dict[attr_name]).split()).upper()
+                    if attr_name in target_dict and target_dict[attr_name]
+                    else ""
+                ) + "|"
+>>>>>>>> origin/main:src/nomino-mapper.py
         else:
             string_to_hash = json.dumps(target_dict, sort_keys=True)
-        return hashlib.md5(bytes(string_to_hash, 'utf-8')).hexdigest()
+        return hashlib.md5(bytes(string_to_hash, "utf-8")).hexdigest()
+
+<<<<<<<< HEAD:src/nomino_mapper.py
+========
+    # ----------------------------------------
+    def format_date(self, raw_date):
+        try:
+            return datetime.strftime(dateparse(raw_date), "%Y-%m-%d")
+        except:
+            self.update_stat("!INFO", "BAD_DATE", raw_date)
+            return ""
+
+    # ----------------------------------------
+    def remove_empty_tags(self, d):
+        if isinstance(d, dict):
+            for k, v in list(d.items()):
+                if v is None or len(str(v).strip()) == 0:
+                    del d[k]
+                else:
+                    self.remove_empty_tags(v)
+        if isinstance(d, list):
+            for v in d:
+                self.remove_empty_tags(v)
+        return d
+
+    # ----------------------------------------
+    def update_stat(self, cat1, cat2, example=None):
+
+        if cat1 not in self.stat_pack:
+            self.stat_pack[cat1] = {}
+        if cat2 not in self.stat_pack[cat1]:
+            self.stat_pack[cat1][cat2] = {}
+            self.stat_pack[cat1][cat2]["count"] = 0
+
+        self.stat_pack[cat1][cat2]["count"] += 1
+        if example:
+            if "examples" not in self.stat_pack[cat1][cat2]:
+                self.stat_pack[cat1][cat2]["examples"] = []
+            if example not in self.stat_pack[cat1][cat2]["examples"]:
+                if len(self.stat_pack[cat1][cat2]["examples"]) < 5:
+                    self.stat_pack[cat1][cat2]["examples"].append(example)
+                else:
+                    randomSampleI = random.randint(2, 4)
+                    self.stat_pack[cat1][cat2]["examples"][randomSampleI] = example
+        return
+
+    # ----------------------------------------
+    def capture_mapped_stats(self, json_data):
+
+        record_type = json_data.get("RECORD_TYPE", "UNKNOWN_TYPE")
+
+        for key1 in json_data:
+            if type(json_data[key1]) != list:
+                self.update_stat(record_type, key1, json_data[key1])
+            else:
+                for subrecord in json_data[key1]:
+                    for key2 in subrecord:
+                        self.update_stat(record_type, key2, subrecord[key2])
 
 
-#----------------------------------------
+# ----------------------------------------
+def signal_handler(signal, frame):
+    print("USER INTERRUPT! Shutting down ... (please wait)")
+    global shut_down
+    shut_down = True
+    return
+>>>>>>>> origin/main:src/nomino-mapper.py
+
+
+# ----------------------------------------
 if __name__ == "__main__":
     proc_start_time = time.time()
     shut_down = False
+<<<<<<<< HEAD:src/nomino_mapper.py
+========
+    signal.signal(signal.SIGINT, signal_handler)
+>>>>>>>> origin/main:src/nomino-mapper.py
 
-    input_file = 'riskcodeWL.csv'
-    csv_dialect = 'excel'
+    input_file = "riskcodeWL.csv"
+    csv_dialect = "excel"
 
     parser = argparse.ArgumentParser()
+<<<<<<<< HEAD:src/nomino_mapper.py
     parser.add_argument('-i', '--input_file', dest='input_file', default = input_file, help='the name of the input file')
     parser.add_argument('-o', '--output_file', dest='output_file', help='the name of the output file')
     parser.add_argument('-d', '--data_source', dest='data_source', default='NOMINODATA', help='the data source code to use, default="NOMINO"')
+========
+    parser.add_argument(
+        "-i",
+        "--input_file",
+        dest="input_file",
+        default=input_file,
+        help="the name of the input file",
+    )
+    parser.add_argument(
+        "-o", "--output_file", dest="output_file", help="the name of the output file"
+    )
+    parser.add_argument(
+        "-l",
+        "--log_file",
+        dest="log_file",
+        help="optional name of the statistics log file",
+    )
+    parser.add_argument(
+        "-d",
+        "--data_source",
+        dest="data_source",
+        default="NOMINO",
+        help='the data source code to use, default="NOMINO"',
+    )
+>>>>>>>> origin/main:src/nomino-mapper.py
     args = parser.parse_args()
 
     if not args.input_file or not os.path.exists(args.input_file):
-        print('\nPlease supply a valid input file name on the command line\n')
+        print("\nPlease supply a valid input file name on the command line\n")
         sys.exit(1)
     if not args.output_file:
+<<<<<<<< HEAD:src/nomino_mapper.py
         print('\nPlease supply a valid output file name on the command line\n')
+========
+        print("\nPlease supply a valid output file name on the command line\n")
+>>>>>>>> origin/main:src/nomino-mapper.py
         sys.exit(1)
 
-    input_file_handle = open(args.input_file, 'r')
-    output_file_handle = open(args.output_file, 'w', encoding='utf-8')
+    input_file_handle = open(args.input_file, "r")
+    output_file_handle = open(args.output_file, "w", encoding="utf-8")
     mapper = mapper()
 
     input_row_count = 0
+<<<<<<<< HEAD:src/nomino_mapper.py
+========
+    for input_row in csv.DictReader(input_file_handle, dialect=csv_dialect):
+        mapper.map(input_row, input_row_count)
+        input_row_count += 1
+        if input_row_count % 1000 == 0:
+            print(f"{input_row_count} rows read")
+        if shut_down:
+            break
+
+>>>>>>>> origin/main:src/nomino-mapper.py
     output_row_count = 0
     try:
         for input_row in csv.DictReader(input_file_handle, dialect=csv_dialect):
@@ -623,9 +1139,15 @@ if __name__ == "__main__":
 
         for record_id in mapper.record_cache.keys():
             json_data = mapper.record_cache[record_id]
+<<<<<<<< HEAD:src/nomino_mapper.py
             output_file_handle.write(json.dumps(json_data) + '\n')
+========
+            mapper.capture_mapped_stats(json_data)
+            output_file_handle.write(json.dumps(json_data) + "\n")
+>>>>>>>> origin/main:src/nomino-mapper.py
             output_row_count += 1
             if output_row_count % 1000 == 0:
+<<<<<<<< HEAD:src/nomino_mapper.py
                 print(f'{output_row_count} rows written')
 
     except KeyboardInterrupt:
@@ -635,8 +1157,30 @@ if __name__ == "__main__":
     elapsed_mins = round((time.time() - proc_start_time) / 60, 1)
     run_status = ('completed in' if not shut_down else 'aborted after') + f' {elapsed_mins} minutes'
     print(f'{input_row_count} rows read, {output_row_count} rows written, {run_status}\n')
+========
+                print(f"{output_row_count} rows written")
+            if shut_down:
+                break
+
+    elapsed_mins = round((time.time() - proc_start_time) / 60, 1)
+    run_status = (
+        "completed in" if not shut_down else "aborted after"
+    ) + " %s minutes" % elapsed_mins
+    print(
+        f"{input_row_count} rows read, {output_row_count} rows written, {run_status}\n"
+    )
+>>>>>>>> origin/main:src/nomino-mapper.py
 
     output_file_handle.close()
     input_file_handle.close()
 
+<<<<<<<< HEAD:src/nomino_mapper.py
+========
+    # --write statistics file
+    if args.log_file:
+        with open(args.log_file, "w") as outfile:
+            json.dump(mapper.stat_pack, outfile, indent=4, sort_keys=True)
+        print("Mapping stats written to %s\n" % args.log_file)
+
+>>>>>>>> origin/main:src/nomino-mapper.py
     sys.exit(0)
