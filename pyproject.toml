@@ -83,6 +83,7 @@ disable = [
     "unspecified-encoding",
     "no-member",
     "no-value-for-parameter",
+    "import-error",
 ]
 good-names = ["mapper-nomino"]
 ignore = ["__init__.py"]

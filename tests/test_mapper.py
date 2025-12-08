@@ -8,7 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
+import pytest  # pylint: disable=unused-import
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 SAMPLE_INPUT = FIXTURES_DIR / "sample_input.csv"
@@ -46,6 +46,7 @@ def test_mapper_produces_expected_output():
             [sys.executable, str(MAPPER_SCRIPT), "-i", str(SAMPLE_INPUT), "-o", output_path],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         assert result.returncode == 0, f"Mapper failed: {result.stderr}"
@@ -87,6 +88,7 @@ def test_mapper_output_has_required_fields():
             [sys.executable, str(MAPPER_SCRIPT), "-i", str(SAMPLE_INPUT), "-o", output_path],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         records = load_jsonl(Path(output_path))
@@ -112,6 +114,7 @@ def test_mapper_features_have_record_type():
             [sys.executable, str(MAPPER_SCRIPT), "-i", str(SAMPLE_INPUT), "-o", output_path],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         records = load_jsonl(Path(output_path))
