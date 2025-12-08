@@ -11,8 +11,8 @@ This mapper converts Nomino data CSV files into JSONL files ready to load into S
 ## Usage
 
 ```console
-python3 nomino-mapper.py --help
-usage: nomino-mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-d DATA_SOURCE]
+python3 src/nomino_mapper.py --help
+usage: nomino_mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-d DATA_SOURCE]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -27,17 +27,23 @@ optional arguments:
 ### Example
 
 ```console
-python3 nomino-mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
+python3 src/nomino_mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
 ```
 
 Add the `-d` parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
 
 ## Mapping Details
 
-See [nomino-mapper.py](nomino-mapper.py) for field mapping logic. The code is designed to be readable and self-documenting.
+See [src/nomino_mapper.py](src/nomino_mapper.py) for field mapping logic. The code is designed to be readable and self-documenting.
 
 ## Configuring Senzing
 
-Run the [nomino_config_updates.g2c](nomino_config_updates.g2c) file with the Senzing configuration tool to add the data source.
+Run the [src/nomino_config.g2c](src/nomino_config.g2c) file with the Senzing configuration tool to add the data source.
 
 If you override the default data source code with the `-d` parameter, update the `.g2c` file accordingly.
+
+## Testing
+
+```console
+pytest tests/
+```

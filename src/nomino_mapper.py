@@ -557,8 +557,8 @@ class mapper():
         if raw_data.get('Person'):
             self.add_to_payload(payload, raw_data, 'Person')
 
-        for key in payload:
-            self.record_cache[record_id][key] = ' | '.join(payload[key])
+        for key, values in payload.items():
+            self.record_cache[record_id][key] = ' | '.join(values)
 
     #----------------------------------------
     def load_reference_data(self):
@@ -633,7 +633,7 @@ if __name__ == "__main__":
         print('\nUSER INTERRUPT! Shutting down ...')
 
     elapsed_mins = round((time.time() - proc_start_time) / 60, 1)
-    run_status = ('completed in' if not shut_down else 'aborted after') + ' %s minutes' % elapsed_mins
+    run_status = ('completed in' if not shut_down else 'aborted after') + f' {elapsed_mins} minutes'
     print(f'{input_row_count} rows read, {output_row_count} rows written, {run_status}\n')
 
     output_file_handle.close()
