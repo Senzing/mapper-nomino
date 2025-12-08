@@ -6,7 +6,6 @@ import argparse
 import csv
 import json
 import time
-import random
 import hashlib
 
 #=========================
@@ -16,7 +15,6 @@ class mapper():
     def __init__(self):
 
         self.load_reference_data()
-        self.stat_pack = {}
         self.record_cache = {}
         #self.person_types = ('INDIVIDUAL', 'PERSON', 'P', 'PERSONNE PHYSIQUE', 'PERSONNE MORALE', 'BANNED TERRORIST INDIVIDUAL')
 
@@ -652,39 +650,6 @@ class mapper():
         return hashlib.md5(bytes(string_to_hash, 'utf-8')).hexdigest()
 
 
-    #----------------------------------------
-    def update_stat(self, cat1, cat2, example=None):
-
-        if cat1 not in self.stat_pack:
-            self.stat_pack[cat1] = {}
-        if cat2 not in self.stat_pack[cat1]:
-            self.stat_pack[cat1][cat2] = {}
-            self.stat_pack[cat1][cat2]['count'] = 0
-
-        self.stat_pack[cat1][cat2]['count'] += 1
-        if example:
-            if 'examples' not in self.stat_pack[cat1][cat2]:
-                self.stat_pack[cat1][cat2]['examples'] = []
-            if example not in self.stat_pack[cat1][cat2]['examples']:
-                if len(self.stat_pack[cat1][cat2]['examples']) < 5:
-                    self.stat_pack[cat1][cat2]['examples'].append(example)
-                else:
-                    random_sample_i = random.randint(2, 4)
-                    self.stat_pack[cat1][cat2]['examples'][random_sample_i] = example
-
-    #----------------------------------------
-    def capture_mapped_stats(self, json_data):
-
-        record_type = json_data.get('RECORD_TYPE', 'UNKNOWN_TYPE')
-
-        for key1 in json_data:
-            if type(json_data[key1]) != list:
-                self.update_stat(record_type, key1, json_data[key1])
-            else:
-                for subrecord in json_data[key1]:
-                    for key2 in subrecord:
-                        self.update_stat(record_type, key2, subrecord[key2])
-
 #----------------------------------------
 if __name__ == "__main__":
     proc_start_time = time.time()
@@ -696,7 +661,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input_file', dest='input_file', default = input_file, help='the name of the input file')
     parser.add_argument('-o', '--output_file', dest='output_file', help='the name of the output file')
-    parser.add_argument('-l', '--log_file', dest='log_file', help='optional name of the statistics log file')
     parser.add_argument('-d', '--data_source', dest='data_source', default='NOMINODATA', help='the data source code to use, default="NOMINO"')
     args = parser.parse_args()
 
@@ -722,7 +686,6 @@ if __name__ == "__main__":
 
         for record_id in mapper.record_cache.keys():
             json_data = mapper.record_cache[record_id]
-            mapper.capture_mapped_stats(json_data)
             output_file_handle.write(json.dumps(json_data) + '\n')
             output_row_count += 1
             if output_row_count % 1000 == 0:
@@ -738,11 +701,5 @@ if __name__ == "__main__":
 
     output_file_handle.close()
     input_file_handle.close()
-
-    #--write statistics file
-    if args.log_file:
-        with open(args.log_file, 'w') as outfile:
-            json.dump(mapper.stat_pack, outfile, indent=4, sort_keys = True)
-        print('Mapping stats written to %s\n' % args.log_file)
 
     sys.exit(0)

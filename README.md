@@ -12,7 +12,7 @@ This mapper converts Nomino data CSV files into JSONL files ready to load into S
 
 ```console
 python3 nomino-mapper.py --help
-usage: nomino-mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-l LOG_FILE] [-d DATA_SOURCE]
+usage: nomino-mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-d DATA_SOURCE]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -20,8 +20,6 @@ optional arguments:
                         the name of the input file
   -o OUTPUT_FILE, --output_file OUTPUT_FILE
                         the name of the output file
-  -l LOG_FILE, --log_file LOG_FILE
-                        optional name of the statistics log file
   -d DATA_SOURCE, --data_source DATA_SOURCE
                         the data source code to use, default="NOMINO"
 ```
@@ -32,8 +30,7 @@ optional arguments:
 python3 nomino-mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
 ```
 
-- Add the `-l` parameter to get stats and examples of the mapped file.
-- Add the `-d` parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
+Add the `-d` parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
 
 ## Configuring Senzing
 
