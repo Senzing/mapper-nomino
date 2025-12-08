@@ -577,7 +577,7 @@ class mapper():
             #senzing_attr = 'ALIAS_NAME_FULL'
             # abandoned as too many variations to be fruitful
             #   sometimes its a person name associated with the organization!
-            #if record_type == 'PERSON':  
+            #if record_type == 'PERSON':
             #    alias_name = raw_data.get('Alias_name').replace(',', ' ').replace('.', ' ') + ' '
             #    if any(x in alias_name for x in (' COMPANY ', ' LLC ', ' INC ')):
             #        senzing_attr = 'GROUP_ASSOCIATION_ORG_NAME'
@@ -638,7 +638,7 @@ class mapper():
         if not raw_value:
             return ''
         new_value = ' '.join(str(raw_value).strip().split())
-        if new_value.upper() in self.variant_data['GARBAGE_VALUES']: 
+        if new_value.upper() in self.variant_data['GARBAGE_VALUES']:
             return ''
         return new_value
 
@@ -648,7 +648,7 @@ class mapper():
             string_to_hash = ''
             for attr_name in sorted(attr_list):
                 string_to_hash += (' '.join(str(target_dict[attr_name]).split()).upper() if attr_name in target_dict and target_dict[attr_name] else '') + '|'
-        else:           
+        else:
             string_to_hash = json.dumps(target_dict, sort_keys=True)
         return hashlib.md5(bytes(string_to_hash, 'utf-8')).hexdigest()
 
@@ -670,9 +670,8 @@ class mapper():
                 if len(self.stat_pack[cat1][cat2]['examples']) < 5:
                     self.stat_pack[cat1][cat2]['examples'].append(example)
                 else:
-                    randomSampleI = random.randint(2, 4)
-                    self.stat_pack[cat1][cat2]['examples'][randomSampleI] = example
-        return
+                    random_sample_i = random.randint(2, 4)
+                    self.stat_pack[cat1][cat2]['examples'][random_sample_i] = example
 
     #----------------------------------------
     def capture_mapped_stats(self, json_data):
@@ -692,12 +691,11 @@ def signal_handler(signal, frame):
     print('USER INTERUPT! Shutting down ... (please wait)')
     global shut_down
     shut_down = True
-    return
 
 #----------------------------------------
 if __name__ == "__main__":
     proc_start_time = time.time()
-    shut_down = False   
+    shut_down = False
     signal.signal(signal.SIGINT, signal_handler)
 
     input_file = 'riskcodeWL.csv'
@@ -714,7 +712,7 @@ if __name__ == "__main__":
         print('\nPlease supply a valid input file name on the command line\n')
         sys.exit(1)
     if not args.output_file:
-        print('\nPlease supply a valid output file name on the command line\n') 
+        print('\nPlease supply a valid output file name on the command line\n')
         sys.exit(1)
 
     input_file_handle = open(args.input_file, 'r')
@@ -751,11 +749,10 @@ if __name__ == "__main__":
     input_file_handle.close()
 
     #--write statistics file
-    if args.log_file: 
+    if args.log_file:
         with open(args.log_file, 'w') as outfile:
             json.dump(mapper.stat_pack, outfile, indent=4, sort_keys = True)
         print('Mapping stats written to %s\n' % args.log_file)
 
 
     sys.exit(0)
-
