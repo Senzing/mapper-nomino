@@ -18,11 +18,11 @@ class mapper():
         self.record_cache = {}
 
     #----------------------------------------
-    def add_to_other_list(self, other_list, raw_data, key):
-        if key not in other_list:
-            other_list[key] = [raw_data.get(key)]
+    def add_to_payload(self, payload, raw_data, key):
+        if key not in payload:
+            payload[key] = [raw_data.get(key)]
         else:
-            other_list[key].append(raw_data.get(key))
+            payload[key].append(raw_data.get(key))
 
     #----------------------------------------
     def map(self, raw_data):
@@ -32,7 +32,7 @@ class mapper():
             raw_data[attribute] = self.clean_value(raw_data[attribute])
 
         record_id = self.compute_record_hash(raw_data, ['Source', 'OriginalID', 'namefull', 'Title','page_URL'])
-        other_list = {}
+        payload = {}
 
         raw_type = raw_data.get('type', '').upper()
 
@@ -58,7 +58,7 @@ class mapper():
         #      20820 (511)
         #      CAF0010 (400)
         if raw_data.get('OriginalID'):
-            self.add_to_other_list(other_list, raw_data, 'OriginalID')
+            self.add_to_payload(payload, raw_data, 'OriginalID')
 
 
         # columnName: namefull
@@ -140,22 +140,22 @@ class mapper():
         #      Haji (249)
         #      Maulavi (202)
         if raw_data.get('Title'):
-            self.add_to_other_list(other_list, raw_data, 'Title')
+            self.add_to_payload(payload, raw_data, 'Title')
 
         if raw_data.get('marks'):
-            self.add_to_other_list(other_list, raw_data, 'marks')
+            self.add_to_payload(payload, raw_data, 'marks')
 
         if raw_data.get('eyes'):
-            self.add_to_other_list(other_list, raw_data, 'eyes')
+            self.add_to_payload(payload, raw_data, 'eyes')
 
         if raw_data.get('hair'):
-            self.add_to_other_list(other_list, raw_data, 'hair')
+            self.add_to_payload(payload, raw_data, 'hair')
 
         if raw_data.get('height'):
-            self.add_to_other_list(other_list, raw_data, 'height')
+            self.add_to_payload(payload, raw_data, 'height')
 
         if raw_data.get('weight'):
-            self.add_to_other_list(other_list, raw_data, 'weight')
+            self.add_to_payload(payload, raw_data, 'weight')
 
         # columnName: Sex
         # 7.85 populated, 0.04 unique
@@ -175,7 +175,7 @@ class mapper():
         #      SK (518)
         #      CS (497)
         if raw_data.get('Languages'):
-            self.add_to_other_list(other_list, raw_data, 'Languages')
+            self.add_to_payload(payload, raw_data, 'Languages')
 
         # columnName: TIN
         # 0.71 populated, 13.74 unique
@@ -197,7 +197,7 @@ class mapper():
         #      (1) D00000897 (2) D00004262 (56)
         #      00814L001424 (55)
         if raw_data.get('documents'):
-            self.add_to_other_list(other_list, raw_data, 'documents')
+            self.add_to_payload(payload, raw_data, 'documents')
 
         # columnName: POB
         # 6.41 populated, 7.2 unique
@@ -277,10 +277,10 @@ class mapper():
         #      561 - General Services (7)
         #      854 - General Services (7)
         if raw_data.get('constituancy'):
-            self.add_to_other_list(other_list, raw_data, 'constituancy')
+            self.add_to_payload(payload, raw_data, 'constituancy')
 
         if raw_data.get('political_party'):
-            self.add_to_other_list(other_list, raw_data, 'political_party')
+            self.add_to_payload(payload, raw_data, 'political_party')
 
         # columnName: Image_URL
         # 0.49 populated, 43.42 unique
@@ -290,7 +290,7 @@ class mapper():
         #      https://www.mha.gov.in/sites/default/files/2023-03/TERRORIST_ORGANIZATIONS_10032023.pdf (44)
         #      https://www.mha.gov.in/sites/default/files/2023-01/NAMESOFUNLAWFULASSOCIATIONS_20012023.pdf (21)
         if raw_data.get('Image_URL'):
-            self.add_to_other_list(other_list, raw_data, 'Image_URL')
+            self.add_to_payload(payload, raw_data, 'Image_URL')
 
         # columnName: page_URL
         # 99.85 populated, 0.13 unique
@@ -300,7 +300,7 @@ class mapper():
         #      http://www.hm-treasury.gov.uk/fin_sanctions_index.htm (17686)
         #      https://www.dfat.gov.au/international-relations/security/sanctions/Pages/consolidated-list (8295)
         if raw_data.get('page_URL'):
-            self.add_to_other_list(other_list, raw_data, 'page_URL')
+            self.add_to_payload(payload, raw_data, 'page_URL')
 
         # columnName: Source
         # 99.85 populated, 0.01 unique
@@ -310,7 +310,7 @@ class mapper():
         #      HM-Treasury Consolidated list of financial sanctions targets (17686)
         #      DFAT - Consolidated list (8295)
         if raw_data.get('Source'):
-            self.add_to_other_list(other_list, raw_data, 'Source')
+            self.add_to_payload(payload, raw_data, 'Source')
 
         # columnName: type
         # 99.54 populated, 0.02 unique
@@ -320,7 +320,7 @@ class mapper():
         #      Special Entity Designation (13941)
         #      P (13531)
         if raw_data.get('type'):
-            self.add_to_other_list(other_list, raw_data, 'type')
+            self.add_to_payload(payload, raw_data, 'type')
 
         # columnName: offense
         # 40.17 populated, 0.59 unique
@@ -330,7 +330,7 @@ class mapper():
         #      Z (4397)
         #      03-SDN-01 (4364)
         if raw_data.get('offense'):
-            self.add_to_other_list(other_list, raw_data, 'offense')
+            self.add_to_payload(payload, raw_data, 'offense')
 
         # columnName: wantedby
         # 55.3 populated, 0.1 unique
@@ -340,7 +340,7 @@ class mapper():
         #      DOJ (2580)
         #      EPA (2198)
         if raw_data.get('wantedby'):
-            self.add_to_other_list(other_list, raw_data, 'wantedby')
+            self.add_to_payload(payload, raw_data, 'wantedby')
 
         # columnName: Program
         # 88.48 populated, 0.35 unique
@@ -350,7 +350,7 @@ class mapper():
         #      UKR (8496)
         #      RUSSIA-EO14024 (5670)
         if raw_data.get('Program'):
-            self.add_to_other_list(other_list, raw_data, 'Program')
+            self.add_to_payload(payload, raw_data, 'Program')
 
         # columnName: Legalbasis
         # 69.94 populated, 0.55 unique
@@ -360,7 +360,7 @@ class mapper():
         #      TAQA (2655)
         #      1 (2503)
         if raw_data.get('Legalbasis'):
-            self.add_to_other_list(other_list, raw_data, 'Legalbasis')
+            self.add_to_payload(payload, raw_data, 'Legalbasis')
 
         # columnName: Listingdate
         # 17.99 populated, 3.58 unique
@@ -370,7 +370,7 @@ class mapper():
         #      2023/03/14 00:00:00.000 (938)
         #      2023/07/21 00:00:00.000 (753)
         if raw_data.get('Listingdate'):
-            self.add_to_other_list(other_list, raw_data, 'Listingdate')
+            self.add_to_payload(payload, raw_data, 'Listingdate')
 
         # columnName: Call_sign
         # 18.05 populated, 0.38 unique
@@ -390,7 +390,7 @@ class mapper():
         #      Crude Oil Tanker (129)
         #      Oil tanker (56)
         if raw_data.get('Vess_type'):
-            self.add_to_other_list(other_list, raw_data, 'Vess_type')
+            self.add_to_payload(payload, raw_data, 'Vess_type')
 
         # columnName: Tonnage
         # 18.05 populated, 0.09 unique
@@ -400,7 +400,7 @@ class mapper():
         #      159,681 (7)
         #      99,144 (6)
         if raw_data.get('Tonnage'):
-            self.add_to_other_list(other_list, raw_data, 'Tonnage')
+            self.add_to_payload(payload, raw_data, 'Tonnage')
 
         # columnName: GRT
         # 18.08 populated, 0.19 unique
@@ -410,7 +410,7 @@ class mapper():
         #      160,930 (14)
         #      165,000 (10)
         if raw_data.get('GRT'):
-            self.add_to_other_list(other_list, raw_data, 'GRT')
+            self.add_to_payload(payload, raw_data, 'GRT')
 
         # columnName: Vess_Flag
         # 18.08 populated, 0.08 unique
@@ -420,7 +420,7 @@ class mapper():
         #      Russia (152)
         #      North Korea (81)
         if raw_data.get('Vess_Flag'):
-            self.add_to_other_list(other_list, raw_data, 'Vess_Flag')
+            self.add_to_payload(payload, raw_data, 'Vess_Flag')
 
         # columnName: Vess_owner
         # 18.08 populated, 0.03 unique
@@ -430,7 +430,7 @@ class mapper():
         #      Hapjanggang Shipping Corp (10)
         #      Chonmyong Shipping Co (9)
         if raw_data.get('Vess_owner'):
-            self.add_to_other_list(other_list, raw_data, 'Vess_owner')
+            self.add_to_payload(payload, raw_data, 'Vess_owner')
 
         # columnName: remarks
         # 44.08 populated, 40.43 unique
@@ -440,7 +440,7 @@ class mapper():
         #      ; (1625)
         #      12/31/2999 (852)
         if raw_data.get('remarks'):
-            self.add_to_other_list(other_list, raw_data, 'remarks')
+            self.add_to_payload(payload, raw_data, 'remarks')
 
         if raw_data.get('Address') or raw_data.get('City') or raw_data.get('province') or raw_data.get('postcode') or raw_data.get('Country'):
             address_data = {}
@@ -505,7 +505,7 @@ class mapper():
         #      NGA (535)
         #      Los Angeles County (399)
         if raw_data.get('Address_remarks'):
-            self.add_to_other_list(other_list, raw_data, 'Address_remarks')
+            self.add_to_payload(payload, raw_data, 'Address_remarks')
 
         # columnName: Alias_type
         # 25.1 populated, 0.08 unique
@@ -515,7 +515,7 @@ class mapper():
         #      Primary name variation (4729)
         #      fka (2792)
         if raw_data.get('Alias_type'):
-            self.add_to_other_list(other_list, raw_data, 'Alias_type')
+            self.add_to_payload(payload, raw_data, 'Alias_type')
 
         # columnName: Alias_name
         # 17.31 populated, 48.8 unique
@@ -526,19 +526,19 @@ class mapper():
         #      BANK VNESHNEY TORGOVLI ROSSIYSKOY FEDERATSII CLOSED JOINT STOCK COMPANY (72)
         # Alias_name not mapped to NAME feature - too many variations to be useful for matching
         if raw_data.get('Alias_name'):
-            self.add_to_other_list(other_list, raw_data, 'Alias_name')
+            self.add_to_payload(payload, raw_data, 'Alias_name')
 
         # columnName: riskcode
         # 100.0 populated, 0.0 unique
         #      WL (269183)
         if raw_data.get('riskcode'):
-            self.add_to_other_list(other_list, raw_data, 'riskcode')
+            self.add_to_payload(payload, raw_data, 'riskcode')
 
         # columnName: active
         # 100.0 populated, 0.0 unique
         #      1 (269183)
         if raw_data.get('active'):
-            self.add_to_other_list(other_list, raw_data, 'active')
+            self.add_to_payload(payload, raw_data, 'active')
 
         # columnName: timestamp
         # 100.0 populated, 0.09 unique
@@ -548,17 +548,17 @@ class mapper():
         #      2024/02/05 23:00:35.000000000 (5032)
         #      2024/02/05 23:00:30.000000000 (4998)
         if raw_data.get('timestamp'):
-            self.add_to_other_list(other_list, raw_data, 'timestamp')
+            self.add_to_payload(payload, raw_data, 'timestamp')
 
         # columnName: Person
         # 3.05 populated, 0.02 unique
         #      0 (5676)
         #      1 (2532)
         if raw_data.get('Person'):
-            self.add_to_other_list(other_list, raw_data, 'Person')
+            self.add_to_payload(payload, raw_data, 'Person')
 
-        for key in other_list:
-            self.record_cache[record_id][key] = ' | '.join(other_list[key])
+        for key in payload:
+            self.record_cache[record_id][key] = ' | '.join(payload[key])
 
     #----------------------------------------
     def load_reference_data(self):
