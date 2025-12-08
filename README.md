@@ -59,5 +59,3 @@ Use the Senzing configuration tool to add the data source code(s) you decide to 
 addDataSource NOMINO
 save
 ```
-
-You are now ready to load the JSONL output file into Senzing using your desired method!
