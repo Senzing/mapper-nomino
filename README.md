@@ -2,13 +2,17 @@
 
 ## Overview
 
-This mapper converts Nomino data csv files into json files ready to load into Senzing. You can purchase Nomino data at [https://www.nominodata.com]
+This mapper converts Nomino data CSV files into JSONL files ready to load into Senzing. You can purchase Nomino data at [https://www.nominodata.com](https://www.nominodata.com/)
 
-Full Usage:
+## Prerequisites
+
+- Python 3.9 or higher
+
+## Usage
 
 ```console
-python3 nomino-mapper.py --help
-usage: nomino-mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-l LOG_FILE] [-d DATA_SOURCE]
+python3 src/nomino_mapper.py --help
+usage: nomino_mapper.py [-h] [-i INPUT_FILE] [-o OUTPUT_FILE] [-d DATA_SOURCE]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -16,47 +20,34 @@ optional arguments:
                         the name of the input file
   -o OUTPUT_FILE, --output_file OUTPUT_FILE
                         the name of the output file
-  -l LOG_FILE, --log_file LOG_FILE
-                        optional name of the statistics log file
   -d DATA_SOURCE, --data_source DATA_SOURCE
                         the data source code to use, default="NOMINO"
 ```
 
-Typical Use:
+### Example
 
 ```console
-python3 nomino-mapper.py -i input/riskcodeWL.csv -o output/riskcode-WL.json
+python3 src/nomino_mapper.py -i input/nomino_data.csv -o output/nomino_data.jsonl
 ```
 
-- You can add the -l parameter to get stats and examples of the mapped file.
-- You can add the -d parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
+Add the `-d` parameter to change the data source code from the default. You might want to do this if you want to have a different data source code for each Nomino risk code.
 
-Configuring Senzing:
+## Mapping Details
 
-Go into the G2ConfigTool.py and add the data source code(s) you decide to use.
+Nomino data often contains multiple CSV rows for the same entity, each with different attributes (e.g., separate rows for different addresses or aliases). This mapper groups rows into a single Senzing record by computing a hash of key fields: `Source`, `OriginalID`, `namefull`, `Title`, and `page_URL`. Rows with the same hash are combined, with their attributes merged into the output record.
+
+The mapper also determines the record type (PERSON, ORGANIZATION, VESSEL, or AIRCRAFT) based on the `type` field and other indicators in the data.
+
+See [src/nomino_mapper.py](src/nomino_mapper.py) for field mapping logic. The code is designed to be readable and self-documenting.
+
+## Configuring Senzing
+
+Run the [src/nomino_config.g2c](src/nomino_config.g2c) file with the Senzing configuration tool to add the data source.
+
+If you override the default data source code with the `-d` parameter, update the `.g2c` file accordingly.
+
+## Testing
 
 ```console
-root@995af99a4c9e:/opt/senzing/g2/python# G2ConfigTool.py
-
-Welcome to the Senzing configuration tool! Type help or ? to list commands
-
-(g2cfg) addDataSource NOMINO
-
-Data source successfully added!
-
-(g2cfg) save
-
-Are you certain you wish to proceed and save changes? (y/n) y
-
-Configuration changes saved!
-
-
-Initializing Senzing engines ...
-
-(g2cfg) quit
-
+pytest tests/
 ```
-
-You are now ready to load the json output file into Senzing using your desired method!
-
-[https://www.nominodata.com]: https://www.nominodata.com/
