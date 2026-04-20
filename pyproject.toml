@@ -65,7 +65,7 @@ documentation = [
   "sphinxcontrib-jsmath==1.0.1; python_version > '3.11'",
   "sphinxcontrib-qthelp==2.0.0; python_version > '3.11'",
   "sphinxcontrib-serializinghtml==2.0.0; python_version > '3.11'",
-  "sphinxext-remoteliteralinclude==0.6.0; python_version > '3.11'",
+  "sphinxext-remoteliteralinclude==0.6.1; python_version > '3.11'",
 ]
 lint = [
   "bandit==1.8.6",
