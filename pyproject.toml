@@ -37,7 +37,8 @@ all = [
 ]
 development = [
   "build==1.5.0",
-  "coverage==7.10.7",
+  "coverage==7.10.7; python_version < '3.10'",
+  "coverage==7.14.1; python_version > '3.9'",
   "cryptography==48.0.1",
   "psutil==7.2.2",
   "pytest-cov==7.1.0",
@@ -71,7 +72,8 @@ documentation = [
 lint = [
   "bandit==1.8.6; python_version < '3.10'",
   "bandit==1.9.4; python_version > '3.9'",
-  "black==25.11.0",
+  "black==25.11.0; python_version < '3.10'",
+  "black==26.5.1; python_version > '3.9'",
   "flake8==7.3.0",
   "isort==6.1.0; python_version < '3.10'",
   "isort==8.0.1; python_version > '3.9'",
@@ -85,7 +87,8 @@ lint = [
 test = [
   "pytest==8.4.2; python_version < '3.10'",
   "pytest==9.0.3; python_version > '3.9'",
-  "coverage==7.10.7",
+  "coverage==7.10.7; python_version < '3.10'",
+  "coverage==7.14.1; python_version > '3.9'",
 ]
 
 [tool.bandit]
