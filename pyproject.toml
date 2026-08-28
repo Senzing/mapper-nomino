@@ -37,7 +37,7 @@ all = [
 ]
 development = [
   "build==1.5.0",
-  "coverage==7.15.3",
+  "coverage==7.15.4",
   "cryptography==50.0.0",
   "psutil==7.2.2",
   "pytest-cov==7.1.0",
@@ -78,7 +78,7 @@ lint = [
 ]
 test = [
   "pytest==9.1.1",
-  "coverage==7.15.3",
+  "coverage==7.15.4",
 ]
 
 [tool.bandit]
