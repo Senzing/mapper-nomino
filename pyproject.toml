@@ -45,7 +45,7 @@ development = [
   "pytest==9.1.1",
   "twine==7.0.0",
   "virtualenv==21.7.4",
-  "wheel==0.47.0",
+  "wheel==0.48.0",
 ]
 documentation = [
   "autodocsumm==0.2.15; python_version > '3.11'",
