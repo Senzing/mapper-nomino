@@ -50,7 +50,7 @@ development = [
 documentation = [
   "autodocsumm==0.2.15",
   "myst_parser==4.0.1",
-  "sphinx==8.2.3",
+  "sphinx==9.0.4",
   "sphinx-autodoc-typehints==3.5.1",
   "sphinx-gallery==0.22.1",
   "sphinx-jinja2-compat==0.4.1",
